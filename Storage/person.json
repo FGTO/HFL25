@@ -1,0 +1,26 @@
+[
+    {
+      "personId": "P1",
+      "name": "Kalle Anka",
+      "email": "kalle.anka@example.com",
+      "vehicleIds": ["V1", "V2"]
+    },
+    {
+        "personId": "P2",
+        "name": "Snurre Sprätt",
+        "email": "snurre.spratt@example.com",
+        "vehicleIds": ["V3"]
+      },
+      {
+        "personId": "P3",
+        "name": "Musse Pigg",
+        "email": "misse.pigg@example.com",
+        "vehicleIds": ["V4"]
+      },
+      {
+        "personId": "P4",
+        "name": "Bruce Wayne",
+        "email": "bruce.wayne@example.com",
+        "vehicleIds": ["V5", "V6", "V7", "V8", "V9"]
+      }
+  ]

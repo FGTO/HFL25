@@ -1,0 +1,65 @@
+[
+  {
+    "vehicleId": "V1",
+    "ownerId": "P1",
+    "licensePlate": "ABC123",
+    "model": "Ankbilen",
+    "parkingSpaceId": "PS1"
+  },
+  {
+    "vehicleId": "V2",
+    "ownerId": "P1",
+    "licensePlate": "XYZ789",
+    "model": "Goose Car",
+    "parkingSpaceId": "PS3"
+  },
+  {
+    "vehicleId": "V3",
+    "ownerId": "P2",
+    "licensePlate": "SRO374",
+    "model": "Kaninbilen",
+    "parkingSpaceId": "PS6"
+  },
+  {
+    "vehicleId": "V4",
+    "ownerId": "P3",
+    "licensePlate": "TJE398",
+    "model": "Musbilen",
+    "parkingSpaceId": "PS5"
+  },
+  {
+    "vehicleId": "V5",
+    "ownerId": "P4",
+    "licensePlate": "BAT001",
+    "model": "Batmobil 1",
+    "parkingSpaceId": null
+  },
+  {
+    "vehicleId": "V6",
+    "ownerId": "P4",
+    "licensePlate": "BAT002",
+    "model": "Batmobil 2",
+    "parkingSpaceId": "PS10"
+  },
+  {
+    "vehicleId": "V7",
+    "ownerId": "P4",
+    "licensePlate": "BAT003",
+    "model": "Bat cycle",
+    "parkingSpaceId": "PS11"
+  },
+  {
+    "vehicleId": "V8",
+    "ownerId": "P4",
+    "licensePlate": "BAT004",
+    "model": "Batplane",
+    "parkingSpaceId": "PS12"
+  },
+  {
+    "vehicleId": "V9",
+    "ownerId": "P4",
+    "licensePlate": "BAT005",
+    "model": "Batboat",
+    "parkingSpaceId": "PS13"
+  }
+]
