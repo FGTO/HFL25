@@ -2,50 +2,51 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'userManager.dart';
-// import 'helperFunctions.dart';
+import 'helperFunctions.dart';
 import 'vehicleManager.dart';
 
-
 void main() {
-  print("Running");
-  final personRepo = PersonRepository();
-   final persons = personRepo.getPersonById("P1");
-    print(persons);
-  }
   // readFile();
-/*   while (true) {
-    printMainMenu();
-    String choice = getUserStringInput();
+  stdout.write("Enter a number (1-5) or 'q' to quit: ");
+  while (true) {
+  printMainMenu();
+    String? input = getUserStringInput();
 
-    if (choice.toLowerCase() == 'q') {
-      stdout.writeln("Terminate application...");
-      return;
+    if (input.toLowerCase() == 'q') {
+      print("Exiting...");
+      break;
     }
-    switch (int.tryParse(choice) ?? -1) {
-      case 1:
-        userMenu();
-        break;
-      case 2:
-        vehcicleMenu();
-        break;
-      case 3:
-        print("TODO parkingspace");
-        break;
-      case 4:
-        print("TODO parkings");
-        break;
-      case 5:
-        return;
-      default:
-        print("Something went wrong. Try again.");
-    }
-  } */
 
+    int? number = int.tryParse(input);
+    if (number != null && number >= 1 && number <= 5) {
+      switch (int.tryParse(input) ?? -1) {
+        case 1:
+          userMenu();
+          break;
+        case 2:
+          vehcicleMenu();
+          break;
+        case 3:
+          print("TODO parkingspace");
+          break;
+        case 4:
+          print("TODO parkings");
+          break;
+        case 5:
+          return;
+        default:
+          print("Something went wrong. Try again.");
+      }
+    } else {
+      print("Invalid input. Present enter a number between 1 and 5");
+    }
+  }
+}
 
 void printMainMenu() {
   stdout.writeln();
-  stdout.writeln("Welcome to HBG-Parking:");
-  stdout.writeln("What do you want to handle:");
+/*   stdout.writeln("Welcome to HBG-Parking:");
+  stdout.writeln("What do you want to handle:"); */
   stdout.writeln("1. User");
   stdout.writeln("2. Vehicle");
   stdout.writeln("3. Parkingspace");
@@ -77,9 +78,10 @@ class Parking {
 
 void readFile() async {
   final file = File('file.txt');
-  Stream<String> lines = file.openRead()
-    .transform(utf8.decoder)       // Decode bytes to UTF-8.
-    .transform(LineSplitter());    // Convert stream to individual lines.
+  Stream<String> lines = file
+      .openRead()
+      .transform(utf8.decoder) // Decode bytes to UTF-8.
+      .transform(LineSplitter()); // Convert stream to individual lines.
   try {
     await for (var line in lines) {
       print('$line: ${line.length} characters');
