@@ -49,8 +49,11 @@ void userMenu() {
         stdout.writeln("List of users");
         stdout.writeln("__________________________");
         final persons = personRepo.getAll();
+        /* for (var person in persons) {
+          print("$person.name $person.personId");
+        } */
         for (var person in persons) {
-          print("$person.name $person.se");
+          print("${person.name} ${person.personId}");
         }
         break;
       case 3:
