@@ -25,7 +25,7 @@ void parkingspaceMenu() {
         case 1:
           String parkingSpaceId = uuid.v4();
 
-          stdout.write("Add new parking space");
+          stdout.writeln("Add new parking space");
           stdout.write("Enter name of the new parking space");
           String parkingId = getUserStringInput();
 

@@ -1,11 +1,9 @@
-import 'dart:convert';
-import 'dart:async';
 import 'dart:io';
 import 'userManager.dart';
-import '../utils/helperFunctions.dart';
 import 'vehicleManager.dart';
-import '../Models/vehicleModel.dart';
 import 'parkingspaceManager.dart';
+import 'parkingManager.dart';
+import '../utils/helperFunctions.dart';
 
 void main() {
   // readFile();
@@ -33,7 +31,7 @@ void main() {
           parkingspaceMenu();
           break;
         case 4:
-          print("TODO parkings");
+          parkingMenu();
           break;
         case 5:
           return;
@@ -48,49 +46,10 @@ void main() {
 
 void printMainMenu() {
   stdout.writeln();
-/*   stdout.writeln("Welcome to HBG-Parking:");
-  stdout.writeln("What do you want to handle:"); */
   stdout.writeln("1. User");
   stdout.writeln("2. Vehicle");
   stdout.writeln("3. Parkingspace");
   stdout.writeln("4. Parking");
   stdout.writeln("Q. Quit");
   stdout.write("Enter your choice: ");
-}
-
-class Parkingspace {
-  final int id;
-  final String address;
-  final double hourRate;
-
-  Parkingspace(
-      {required this.id, required this.address, required this.hourRate});
-}
-
-class Parking {
-  final Vehicle vehicle;
-  final Parkingspace parkingspace;
-  final DateTime startTime;
-  final DateTime? endTime = null;
-
-  Parking(
-      {required this.vehicle,
-      required this.parkingspace,
-      required this.startTime});
-}
-
-void readFile() async {
-  final file = File('file.txt');
-  Stream<String> lines = file
-      .openRead()
-      .transform(utf8.decoder) // Decode bytes to UTF-8.
-      .transform(LineSplitter()); // Convert stream to individual lines.
-  try {
-    await for (var line in lines) {
-      print('$line: ${line.length} characters');
-    }
-    print('File is now closed.');
-  } catch (e) {
-    print('Error: $e');
-  }
 }

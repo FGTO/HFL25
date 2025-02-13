@@ -5,7 +5,7 @@ import '../utils/helperFunctions.dart';
 import '../repositories/parkingRepository.dart';
 import '../Models/parkingModel.dart';
 
-void parkingspaceMenu() {
+void parkingMenu() {
   while (true) {
     stdout.writeln();
     stdout.writeln("Handling parking");
