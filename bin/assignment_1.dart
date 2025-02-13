@@ -5,6 +5,7 @@ import 'userManager.dart';
 import '../utils/helperFunctions.dart';
 import 'vehicleManager.dart';
 import '../Models/vehicleModel.dart';
+import 'parkingspaceManager.dart';
 
 void main() {
   // readFile();
@@ -29,7 +30,7 @@ void main() {
           vehcicleMenu();
           break;
         case 3:
-          print("TODO parkingspace");
+          parkingspaceMenu();
           break;
         case 4:
           print("TODO parkings");

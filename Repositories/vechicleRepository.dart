@@ -13,12 +13,12 @@ class VehicleRepository extends DataRepository<Vehicle> {
   Vehicle? getVehicleById(String id) {
     final vehicles = getAll();
 
-   /*  print("Searching for: '$id'");
-    print("Available IDs: ${persons.map((p) => p.personId).toList()}");
- */
+    print("Searching for: '$id'");
+    print("Available IDs: ${vehicles.map((p) => p.licensePlate).toList()}");
+
     for (var vehicle in vehicles) {
       // print("Comparing '${person.personId}' with '$id'");
-      if (vehicle.licensePlate.trim() == id.trim()) {
+      if (vehicle.licensePlate.toLowerCase().trim() == id.trim().toLowerCase()) {
         return vehicle; // Found the person, return it.
       }
     }

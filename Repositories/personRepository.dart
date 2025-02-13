@@ -18,7 +18,7 @@ class PersonRepository extends DataRepository<Person> {
  */
     for (var person in persons) {
       // print("Comparing '${person.personId}' with '$id'");
-      if (person.personId.trim() == id.trim()) {
+      if (person.personId.trim().toLowerCase() == id.trim().toLowerCase()) {
         return person; // Found the person, return it.
       }
     }

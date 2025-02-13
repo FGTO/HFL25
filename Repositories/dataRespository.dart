@@ -28,22 +28,34 @@ abstract class DataRepository<T> {
     saveAll(items);
   }
 
-  void update(String id, T updatedItem) {
+  /* void update(String id, T updatedItem) {
     final items = getAll();
     final index = items.indexWhere((item) => getId(item) == id);
     if (index != -1) {
       items[index] = updatedItem;
       saveAll(items);
     }
+  } */
+ void update(String id, dynamic updatedItem) {
+  final items = getAll();
+  final index = items.indexWhere((item) => getId(item) == id);
+
+  if (index != -1) {
+    items[index] = updatedItem.toLowerCaseFields(); // Ensure lowercase before saving
+    saveAll(items);
   }
+}
+
+
 
   void delete(String id) {
     final items = getAll();
     int initialLength = items.length;
     items.removeWhere((item) {
       bool shouldRemove = getId(item).trim() == id.trim();
-      print(
+      /* print(
           "Checking: '${getId(item)}' == '$id' -> ${shouldRemove ? 'REMOVING' : 'KEEPING'}");
+      */
       return shouldRemove;
     });
 

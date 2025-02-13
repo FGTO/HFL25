@@ -92,7 +92,6 @@ void userMenu() {
           stdout.writeln("Delete user");
           stdout.writeln("Enter user's social security number to delete: ");
           String sec = getUserStringInput().trim();
-          print("calling getPersonById");
           final person = personRepo.getPersonById(sec);
 
           if (person != null) {

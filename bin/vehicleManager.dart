@@ -8,6 +8,7 @@ var uuid = Uuid();
 
 void vehcicleMenu() {
   while (true) {
+    stdout.writeln();
     stdout.writeln("Handling vehicle");
     stdout.writeln("1. Create new vehicle");
     stdout.writeln("2. Show all vehicle");
@@ -29,6 +30,7 @@ void vehcicleMenu() {
           stdout.writeln("2. Large vehicle (<3,5 T)");
           stdout.writeln("3. Motorcycle");
           stdout.writeln("4. Other");
+          stdout.write("Choose one vehicla class: ");
           String selectedVehicleType = getUserStringInput();
           VehicleType vehicleType =
               getVehicleTypeFromInput(selectedVehicleType) ?? VehicleType.other;
@@ -53,12 +55,12 @@ void vehcicleMenu() {
           }
           break;
         case 3:
-          stdout.writeln("Get car by security number");
-          stdout.write("Enter user's social security number (YYYYMMDD-XXXX): ");
-          String securityNum = getUserStringInput();
-          final vehicles = vehicleRepo.getVehicleById(securityNum);
+          stdout.writeln("Get car by license plate number");
+          stdout.write("Enter license plate number: ");
+          String licensePlate = getUserStringInput();
+          final vehicles = vehicleRepo.getVehicleById(licensePlate);
           if (vehicles != null) {
-            print('Found: ${vehicles.licensePlate} - ${vehicles.vehicleId}');
+            print('Found: ${vehicles.licensePlate} - ${vehicles.ownerId}');
           } else {
             print('Vehicle not found.');
           }
@@ -72,7 +74,6 @@ void vehcicleMenu() {
           if (vehicle != null) {
             stdout.write("Enter new license plate: ");
             String newPlate = getUserStringInput();
-            stdout.write("Enter new surname: ");
             Vehicle updatedVehicle = Vehicle(
                 vehicleId: vehicle.vehicleId,
                 ownerId: vehicle.ownerId,
@@ -88,7 +89,6 @@ void vehcicleMenu() {
           stdout.writeln("Delete user");
           stdout.writeln("Enter license plate to delete: ");
           String plate = getUserStringInput().trim();
-          print("calling getPersonById");
           final vehicle = vehicleRepo.getVehicleById(plate);
 
           if (vehicle != null) {
@@ -103,6 +103,8 @@ void vehcicleMenu() {
             }
             break;
           }
+          case 6:
+          return;
         default:
           stdout.writeln("Something went wrong. Try again.");
       }
