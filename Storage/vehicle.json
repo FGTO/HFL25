@@ -15,41 +15,41 @@
   },
   {
     "vehicleId": "V3",
-    "ownerId": "P2",
+    "ownerId": "22222222-2222",
     "licensePlate": "SRO374",
     "model": "Kaninbilen",
     "parkingSpaceId": "PS6"
   },
   {
     "vehicleId": "V4",
-    "ownerId": "P3",
+    "ownerId": "33333333-3333",
     "licensePlate": "TJE398",
     "model": "Musbilen",
     "parkingSpaceId": "PS5"
   },
   {
     "vehicleId": "V5",
-    "ownerId": "P4",
+    "ownerId": "44444444-4444",
     "licensePlate": "BAT001",
     "model": "Batmobil 1",
     "parkingSpaceId": null
   },
   {
     "vehicleId": "V6",
-    "ownerId": "P4",
+    "ownerId": "44444444-4444",
     "licensePlate": "BAT002",
     "model": "Batmobil 2",
     "parkingSpaceId": "PS10"
   },
   {
     "vehicleId": "V7",
-    "ownerId": "P4",
+    "ownerId": "44444444-4444",
     "licensePlate": "BAT003",
     "model": "Bat cycle",
     "parkingSpaceId": "PS11"
   },
   {
-    "vehicleId": "V8",
+    "vehicleId": "44444444-4444",
     "ownerId": "P4",
     "licensePlate": "BAT004",
     "model": "Batplane",
@@ -57,7 +57,7 @@
   },
   {
     "vehicleId": "V9",
-    "ownerId": "P4",
+    "ownerId": "44444444-4444",
     "licensePlate": "BAT005",
     "model": "Batboat",
     "parkingSpaceId": "PS13"

@@ -1,4 +1,5 @@
 library dataRepository;
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -38,8 +39,23 @@ abstract class DataRepository<T> {
 
   void delete(String id) {
     final items = getAll();
-    items.removeWhere((item) => getId(item) == id);
-    saveAll(items);
+    int initialLength = items.length;
+    items.removeWhere((item) {
+      bool shouldRemove = getId(item).trim() == id.trim();
+      print(
+          "Checking: '${getId(item)}' == '$id' -> ${shouldRemove ? 'REMOVING' : 'KEEPING'}");
+      return shouldRemove;
+    });
+
+    if (items.length == initialLength) {
+      print("❌ No item was removed! Make sure IDs match.");
+    } else {
+      print("✅ Entry removed successfully.");
+    }
+
+    print("After delete: ${items.map((e) => getId(e)).toList()}"); // Debugging
+
+    saveAll(items); // Save back to JSON file
   }
 
   T fromJson(Map<String, dynamic> json);

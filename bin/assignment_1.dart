@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'userManager.dart';
-import 'helperFunctions.dart';
+import '../utils/helperFunctions.dart';
 import 'vehicleManager.dart';
+import '../Models/vehicleModel.dart';
 
 void main() {
   // readFile();
+  stdout.writeln("-----------------------------------");
   stdout.write("Enter a number (1-5) or 'q' to quit: ");
   while (true) {
   printMainMenu();
