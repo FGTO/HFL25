@@ -15,7 +15,6 @@ include: package:lints/recommended.yaml
 analyzer:
   errors:
     file_names: ignore
-    ignore: file_names
     library_names: ignore
 # Uncomment the following section to specify additional rules.
 
