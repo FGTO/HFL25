@@ -2,6 +2,8 @@ import 'dart:io';
 import '../utils/helperFunctions.dart';
 import '../repositories/personRepository.dart';
 import '../Models/personModel.dart';
+import 'package:uuid/uuid.dart';
+
 void userMenu() {
   while (true) {
     stdout.writeln();
@@ -14,35 +16,70 @@ void userMenu() {
     stdout.writeln("6. Return to main menu");
     stdout.writeln("Choose one option (1-6): ");
 
+    String firstName;
+    String surname;
+    String email;
+    String securityNum;
+    String validationMessage;
+
     String menuChoice = getUserStringInput();
     int? menuNum = int.tryParse(menuChoice);
     if (menuNum != null && menuNum >= 1 && menuNum <= 6) {
+      var uuid = Uuid();
       var personRepo = PersonRepository();
       switch (menuNum) {
         case 1:
-          stdout.write("Enter first name: ");
-          String firstName = getUserStringInput();
-          stdout.write("Enter surname: ");
-          String surname = getUserStringInput();
-          stdout.write("Enter mail address: ");
-          String email = getUserStringInput();
-          stdout.write("Enter  social security number (12 numbers): ");
-          String securityNum = getUserStringInput();
+          //Prompt for firstname.
+          do {
+            stdout.write("Enter first name: ");
+            firstName = getUserStringInput();
+            if (!RegExp(r'^[a-zA-Z]+$').hasMatch(firstName)) {
+              print(
+                  "Invalid input. Only alphabetical letters are allowed. Try again.");
+            }
+          } while (!RegExp(r'^[a-zA-Z]+$').hasMatch(firstName));
+          //Prompt for surname.
+          do {
+            stdout.write("Enter surname name: ");
+            surname = getUserStringInput();
+            if (!RegExp(r'^[a-zA-Z]+$').hasMatch(surname)) {
+              print(
+                  "Invalid input. Only alphabetical letters are allowed. Try again.");
+            }
+          } while (!RegExp(r'^[a-zA-Z]+$').hasMatch(surname));
 
-          stdout.write(
-              "Enter vehicle registration number(s), separated by commas if multiple: ");
-          String vehicleInput = getUserStringInput();
-          List<String> vehicleIds = vehicleInput.isNotEmpty
-              ? vehicleInput.split(',').map((v) => v.trim()).toList()
-              : [];
+          //Concatanate fullname
+          // String fullname = "$firstName $surname";
 
-          String fullname = "$firstName $surname";
+          do {
+            stdout.write("Enter email: ");
+            email = getUserStringInput();
+            if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                .hasMatch(email)) {
+              print(
+                  "Invalid input. Incorrect email address format. Try again.");
+            }
+          } while (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+              .hasMatch(email));
 
+          do {
+            stdout.write("Enter social security number: ");
+            securityNum = getUserStringInput();
+            validationMessage = securityNumberCheck(securityNum);
+
+            if (validationMessage.isNotEmpty) {
+              print(validationMessage);
+            }
+          } while (validationMessage.isNotEmpty);
+
+          String personUuid = uuid.v4();
           Person newAddPerson = Person(
-              personId: securityNum,
-              name: fullname,
+              personUuid: personUuid,
+              personId: securityNum.replaceAll('-', ''),
+              firstName: firstName,
+              surname: surname,
               email: email,
-              vehicleIds: vehicleIds);
+              vehicleIds: []);
           personRepo.add(newAddPerson);
           break;
         case 2:
@@ -50,16 +87,19 @@ void userMenu() {
           stdout.writeln("__________________________");
           final persons = personRepo.getAll();
           for (var person in persons) {
-            print("${person.name} ${person.personId}");
+            print("${person.firstName} ${person.surname} - ${person.personId}");
           }
           break;
         case 3:
           stdout.writeln("Get user by security number");
-          stdout.write("Enter user's social security number (YYYYMMDD-XXXX): ");
+          stdout.write("Enter user's social security number: ");
           String securityNum = getUserStringInput();
+          securityNum = securityNum.replaceAll('-', '').trim();
+
           final person = personRepo.getPersonById(securityNum);
           if (person != null) {
-            print('Found: ${person.name} - ${person.email}');
+            print(
+                'Found: ${person.firstName} ${person.surname} - ${person.email}');
           } else {
             print('Person not found.');
           }
@@ -68,24 +108,13 @@ void userMenu() {
           stdout.writeln("Update user information");
           stdout.write("Enter user's social security number: ");
           String securityNum = getUserStringInput();
-
+          securityNum = securityNum.replaceAll('-', '').trim();
           final person = personRepo.getPersonById(securityNum);
           if (person != null) {
-            stdout.write("Enter new firstname: ");
-            String newFirstName = getUserStringInput();
-            stdout.write("Enter new surname: ");
-            String newSurname = getUserStringInput();
-            stdout.write("Enter new mail address: ");
-            String newEmail = getUserStringInput();
-            String newFullname = "$newFirstName $newSurname";
-            Person updatedPerson = Person(
-                personId: securityNum,
-                name: newFullname,
-                email: newEmail,
-                vehicleIds: person.vehicleIds);
-            personRepo.update(securityNum, updatedPerson);
+            print("Edit: ${person.firstName} ${person.surname}");
+            editPersonMenu(person);
           } else {
-            print('Security number not found.');
+            print("Can't find any user with $securityNum in the database");
           }
           break;
         case 5:
@@ -96,7 +125,8 @@ void userMenu() {
 
           if (person != null) {
             stdout.write("Are you sure you want to delete: ");
-            stdout.write('Deleting : ${person.name} - ${person.email} ? (y/n)');
+            stdout.write(
+                'Deleting : ${person.firstName} ${person.surname} - ${person.email} ? (y/n)');
             String deleting = getUserStringInput();
             if (deleting.toLowerCase() == 'y') {
               personRepo.delete(sec);
@@ -111,8 +141,67 @@ void userMenu() {
         default:
           stdout.writeln("Something went wrong. Try again.");
       }
-    }else{
+    } else {
       print("Incorrect input. Try again.");
+    }
+  }
+}
+
+void editPersonMenu(Person person) {
+  while (true) {
+    stdout.writeln();
+    stdout.writeln("1. Edit firstname");
+    stdout.writeln("2. Edit surname");
+    stdout.writeln("3. Edit email address");
+    stdout.writeln("4. Return to user menu");
+    stdout.writeln("Choose one option (1-4): ");
+
+    var updateRepo = PersonRepository();
+    String editPersonMenuOpt = getUserStringInput();
+    switch (editPersonMenuOpt) {
+      case "1":
+        stdout.write("Enter new first name: ");
+        String updatedFirstname = getUserStringInput();
+        var updatePersonInfo = Person(
+            personUuid: person.personUuid,
+            personId: person.personId,
+            firstName: updatedFirstname,
+            surname: person.surname,
+            email: person.email,
+            vehicleIds: person.vehicleIds);
+        updateRepo.update(person.personId, updatePersonInfo);
+        break;
+
+      case "2":
+        stdout.write("Enter new surname: ");
+        String updatedSurname = getUserStringInput();
+        var updatePersonInfo = Person(
+            personUuid: person.personUuid,
+            personId: person.personId,
+            firstName: person.firstName,
+            surname: updatedSurname,
+            email: person.email,
+            vehicleIds: person.vehicleIds);
+        updateRepo.update(person.personUuid, updatePersonInfo);
+        break;
+
+      case "3":
+        stdout.write("Enter new email: ");
+        String updatedEmail = getUserStringInput();
+        var updatePersonInfo = Person(
+            personUuid: person.personUuid,
+            personId: person.personId,
+            firstName: person.firstName,
+            surname: person.surname,
+            email: updatedEmail,
+            vehicleIds: person.vehicleIds);
+        updateRepo.update(person.personUuid, updatePersonInfo);
+        break;
+
+      case "4":
+        return;
+      default:
+        break;
     }
   }
 }

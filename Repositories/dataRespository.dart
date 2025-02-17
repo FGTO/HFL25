@@ -28,25 +28,66 @@ abstract class DataRepository<T> {
     saveAll(items);
   }
 
-  /* void update(String id, T updatedItem) {
-    final items = getAll();
-    final index = items.indexWhere((item) => getId(item) == id);
-    if (index != -1) {
-      items[index] = updatedItem;
-      saveAll(items);
-    }
-  } */
- void update(String id, dynamic updatedItem) {
-  final items = getAll();
-  final index = items.indexWhere((item) => getId(item) == id);
+void update(String personId, T updateObject) {
+  var persons = getAll(); // Fetch the list from JSON file
 
-  if (index != -1) {
-    items[index] = updatedItem.toLowerCaseFields(); // Ensure lowercase before saving
-    saveAll(items);
+  // Debugging: Print all loaded persons
+  print("✅ Loaded persons:");
+  for (var person in persons) {
+    print(person);  // Ensure the structure is correct
   }
+
+  final index = persons.indexWhere(
+    (person) =>
+        person is Map<String, dynamic> && 
+        person['personId'].toString() == personId,
+  );
+
+  print("🔍 Searching for personId: $personId");
+  print("🔎 Found index: $index");
+
+  if (index == -1) {
+    print("❌ Person with ID $personId not found.");
+    return;
+  }
+
+  print("✅ Person found at index: $index");
 }
 
+/* void update(String personId, T updateObject) {
+  var persons = getAll();
 
+  // Convert personId to a string and check against the JSON values
+  final index = persons.indexWhere(
+    (person) =>
+        person is Map<String, dynamic> &&
+        person['personId'].toString() == personId,
+  );
+
+  print("Person index for $personId is: $index");
+
+  if (index == -1) {
+    print("❌ Person with ID $personId not found.");
+    return;
+  }
+
+  print("✅ Person found at index: $index");
+}
+ */
+
+/*   void update(String id, dynamic updatedItem) {
+    final items = getAll();
+    final index = items.indexWhere((item) => getId(item) == id);
+
+    if (index != -1) {
+      items[index] =
+          updatedItem.toLowerCaseFields(); // Ensure lowercase before saving
+      saveAll(items);
+      print("Update successful!");
+    } else {
+      print("Person not found!");
+    }
+  } */
 
   void delete(String id) {
     final items = getAll();
@@ -74,3 +115,4 @@ abstract class DataRepository<T> {
   Map<String, dynamic> toJson(T item);
   String getId(T item);
 }
+

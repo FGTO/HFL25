@@ -1,65 +1,49 @@
-/* class Person {
-  final String personId;
-  final String name;
-  final String email;
-  final List<String> vehicleIds;
 
-  Person(
-    {required this.personId, 
-    required this.name, 
-    required this.email, 
-    required this.vehicleIds
-    });
-
-  factory Person.fromJson(Map<String, dynamic> json) => Person(
-        personId: json['personId'],
-        name: json['name'],
-        email: json['email'],
-        vehicleIds: List<String>.from(json['vehicleIds']),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'personId': personId,
-        'name': name,
-        'email': email,
-        'vehicleIds': vehicleIds,
-      };
-}
- */
 class Person {
+  final String personUuid;
   final String personId;
-  final String name;
+  final String firstName;
+  final String surname;
   final String email;
-  final List<String> vehicleIds;
+  final List<String>? vehicleIds;
 
   Person({
+    required this.personUuid,
     required this.personId,
-    required this.name,
+    required this.firstName,
+    required this.surname,
     required this.email,
     required this.vehicleIds,
   });
 
-  factory Person.fromJson(Map<String, dynamic> json) => Person(
-        personId: json['personId'],
-        name: json['name'],
-        email: json['email'],
-        vehicleIds: List<String>.from(json['vehicleIds']),
-      );
+factory Person.fromJson(Map<String, dynamic> json) {
+  return Person(
+    personUuid: json['personUuid'] ?? '',  
+    personId: json['personId'] ?? '',      
+    firstName: json['firstName'] ?? '', 
+    surname: json['surname'] ?? '',
+    email: json['email'] ?? '',
+    vehicleIds: (json['vehicleIds'] as List<dynamic>?)?.cast<String>() ?? [],
+  );
+}
 
   Map<String, dynamic> toJson() => {
+    'personUuid':personUuid,
         'personId': personId,
-        'name': name,
+        'firstName' : firstName,
+        'surname':surname,
         'email': email,
         'vehicleIds': vehicleIds,
       };
 
-  // Add this method to prevent NoSuchMethodError
   Person toLowerCaseFields() {
     return Person(
-      personId: personId, // Keep IDs unchanged
-      name: name.toLowerCase(),
+      personUuid : personUuid,
+      personId: personId, 
+      firstName: firstName.toLowerCase(),
+      surname: surname.toLowerCase(),
       email: email.toLowerCase(),
-      vehicleIds: vehicleIds, // IDs shouldn't change
+      vehicleIds: vehicleIds, 
     );
   }
 }
