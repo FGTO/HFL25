@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'dataRespository.dart';
-import '../Models/personModel.dart';
+import 'package:shared/shared.dart';
+
 
 class PersonRepository extends DataRepository<Person> {
   PersonRepository([super.filePath = 'storage/person.json']);

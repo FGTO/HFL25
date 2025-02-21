@@ -1,5 +1,5 @@
-import '../Models/parkingspaceModel.dart';
-import '../Repositories/dataRespository.dart';
+
+import 'package:shared/shared.dart';
 
 class ParkingspaceRepository extends DataRepository<Parkingspace>{
 ParkingspaceRepository([super.filePath = 'storage/parkingspace.json']);

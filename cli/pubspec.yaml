@@ -1,3 +1,4 @@
+publish_to: none
 name: cli
 description: A sample command-line application.
 version: 1.0.0
@@ -9,7 +10,12 @@ environment:
 # Add regular dependencies here.
 dependencies:
   uuid: ^4.5.1
+  server:
+    path: '../server'
+  shared:
+    path: '../shared'
   # path: ^1.8.0
+
 
 dev_dependencies:
   lints: ^3.0.0

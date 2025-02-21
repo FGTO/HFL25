@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'package:shared/shared.dart';
+
 import '../utils/helperFunctions.dart';
 import '../Repositories/parkingspaceRepository.dart';
 import 'package:uuid/uuid.dart';
-import '../Models/parkingspaceModel.dart';
 
 void parkingspaceMenu() {
   while (true) {

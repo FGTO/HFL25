@@ -1,5 +1,5 @@
-import 'dataRespository.dart';
-import '../Models/vehicleModel.dart';
+
+import 'package:shared/shared.dart';
 
 class VehicleRepository extends DataRepository<Vehicle> {
   VehicleRepository([super.filePath = 'storage/vehicle.json']);
