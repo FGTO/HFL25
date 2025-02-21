@@ -1,5 +1,3 @@
-
-
 import 'package:shared/shared.dart';
 
 class ParkingRepository extends DataRepository<Parking>{
@@ -11,8 +9,8 @@ ParkingRepository([super.filePath = 'storage/parking.json']);
   @override
   Map<String, dynamic> toJson(Parking item) => item.toJson();
 
-  Parking? getParkingById(String id){
-    final parkings = getAll();
+  Future<Parking?> getParkingById(String id) async{
+    final parkings = await getAll();
 
     for(var parking in parkings){
       if(parking.parkingId.trim().toLowerCase() == id.trim().toLowerCase()){

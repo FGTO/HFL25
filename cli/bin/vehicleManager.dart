@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
 
-void vehcicleMenu() {
+Future<void> vehcicleMenu() async {
   while (true) {
     stdout.writeln();
     stdout.writeln("Handling vehicle");
@@ -50,7 +50,7 @@ void vehcicleMenu() {
         case 2:
           stdout.writeln("List all vehicle");
           stdout.writeln("__________________________");
-          final vehicles = vehicleRepo.getAll();
+          final vehicles =await vehicleRepo.getAll();
           for (var vehicle in vehicles) {
             print("${vehicle.licensePlate} ${vehicle.ownerId}");
           }
@@ -59,7 +59,7 @@ void vehcicleMenu() {
           stdout.writeln("Get car by license plate number");
           stdout.write("Enter license plate number: ");
           String licensePlate = getUserStringInput();
-          final vehicles = vehicleRepo.getVehicleById(licensePlate);
+          final vehicles = await vehicleRepo.getVehicleById(licensePlate);
           if (vehicles != null) {
             print('Found: ${vehicles.licensePlate} - ${vehicles.ownerId}');
           } else {
@@ -71,7 +71,7 @@ void vehcicleMenu() {
           stdout.write("Enter license plate: ");
           String licensePlate = getUserStringInput();
 
-          final vehicle = vehicleRepo.getVehicleById(licensePlate);
+          final vehicle = await vehicleRepo.getVehicleById(licensePlate);
           if (vehicle != null) {
             stdout.write("Enter new license plate: ");
             String newPlate = getUserStringInput();
@@ -90,8 +90,7 @@ void vehcicleMenu() {
           stdout.writeln("Delete user");
           stdout.writeln("Enter license plate to delete: ");
           String plate = getUserStringInput().trim();
-          final vehicle = vehicleRepo.getVehicleById(plate);
-
+          final vehicle = await vehicleRepo.getVehicleById(plate);
           if (vehicle != null) {
             stdout.write("Are you sure you want to delete this vehicle ${vehicle.licensePlate}: ");
             stdout.write('Deleting ? (y/n)');

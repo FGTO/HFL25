@@ -5,7 +5,7 @@ import '../utils/helperFunctions.dart';
 import '../repositories/parkingRepository.dart';
 import 'package:uuid/uuid.dart';
 
-void parkingMenu() {
+Future<void> parkingMenu() async {
   while (true) {
     stdout.writeln();
     stdout.writeln("Handling parking");
@@ -50,7 +50,7 @@ void parkingMenu() {
         case 2:
           stdout.writeln("List of parkings");
           stdout.writeln("__________________________");
-          final parkings = parkingRepo.getAll();
+          final parkings = await parkingRepo.getAll();
           for (var parking in parkings) {
             print("${parking.location} with ${parking.parkingSpaceIds}");
           }
@@ -59,7 +59,7 @@ void parkingMenu() {
           stdout.writeln("Get parking info by id");
           stdout.write("Enter parking id: ");
           String parkingId = getUserStringInput();
-          final parking = parkingRepo.getParkingById(parkingId);
+          final parking = await parkingRepo.getParkingById(parkingId);
           if (parking != null) {
             print('''Found: Parking id: ${parking.parkingId}
             parking location: ${parking.location}
@@ -74,7 +74,7 @@ void parkingMenu() {
           stdout.write("Enter parking id: ");
           String parkingId = getUserStringInput();
 
-          final parking = parkingRepo.getParkingById(parkingId);
+          final parking = await parkingRepo.getParkingById(parkingId);
           if (parking != null) {
             stdout.write("Enter new name: ");
             String newParkingName = getUserStringInput();
@@ -96,7 +96,7 @@ void parkingMenu() {
           stdout.writeln("Delete parking");
           stdout.writeln("Enter parking id: ");
           String parkingId = getUserStringInput().trim();
-          final parking = parkingRepo.getParkingById(parkingId);
+          final parking = await parkingRepo.getParkingById(parkingId);
 
           if (parking != null) {
             stdout.write("Are you sure you want to delete: ");

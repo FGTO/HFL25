@@ -5,7 +5,7 @@ import '../utils/helperFunctions.dart';
 import '../repositories/personRepository.dart';
 import 'package:uuid/uuid.dart';
 
-void userMenu() {
+Future<void> userMenu() async {
   while (true) {
     stdout.writeln();
     stdout.writeln("Handling user");
@@ -86,7 +86,7 @@ void userMenu() {
         case 2:
           stdout.writeln("List of users");
           stdout.writeln("__________________________");
-          final persons = personRepo.getAll();
+          final persons = await personRepo.getAll();
           for (var person in persons) {
             print("${person.firstName} ${person.surname} - ${person.personId}");
           }
@@ -97,7 +97,7 @@ void userMenu() {
           String securityNum = getUserStringInput();
           securityNum = securityNum.replaceAll('-', '').trim();
 
-          final person = personRepo.getPersonById(securityNum);
+          final person = await personRepo.getPersonById(securityNum);
           if (person != null) {
             print(
                 'Found: ${person.firstName} ${person.surname} - ${person.email}');
@@ -110,7 +110,7 @@ void userMenu() {
           stdout.write("Enter user's social security number: ");
           String securityNum = getUserStringInput();
           securityNum = securityNum.replaceAll('-', '').trim();
-          final person = personRepo.getPersonById(securityNum);
+          final person = await personRepo.getPersonById(securityNum);
           if (person != null) {
             print("Edit: ${person.firstName} ${person.surname}");
             editPersonMenu(person);
@@ -122,8 +122,7 @@ void userMenu() {
           stdout.writeln("Delete user");
           stdout.writeln("Enter user's social security number to delete: ");
           String sec = getUserStringInput().trim();
-          final person = personRepo.getPersonById(sec);
-
+          final person = await personRepo.getPersonById(sec);
           if (person != null) {
             stdout.write("Are you sure you want to delete: ");
             stdout.write(

@@ -10,8 +10,8 @@ ParkingspaceRepository([super.filePath = 'storage/parkingspace.json']);
   @override
   Map<String, dynamic> toJson(Parkingspace item) => item.toJson();
 
-  Parkingspace? getSpaceById(String id){
-    final parkingspaces = getAll();
+  Future<Parkingspace?> getSpaceById(String id) async {
+    final parkingspaces = await getAll();
 
     for(var parkingspace in parkingspaces){
       if(parkingspace.parkingSpaceId.trim().toLowerCase() == id.trim().toLowerCase()){

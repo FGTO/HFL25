@@ -10,8 +10,8 @@ class VehicleRepository extends DataRepository<Vehicle> {
   @override
   Map<String, dynamic> toJson(Vehicle item) => item.toJson();
 
-  Vehicle? getVehicleById(String id) {
-    final vehicles = getAll();
+  Future<Vehicle?> getVehicleById(String id) async {
+    final vehicles =await getAll();
 
     print("Searching for: '$id'");
     print("Available IDs: ${vehicles.map((p) => p.licensePlate).toList()}");

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:shared/shared.dart';
 
-
 class PersonRepository extends DataRepository<Person> {
   PersonRepository([super.filePath = 'storage/person.json']);
 
@@ -13,12 +12,12 @@ class PersonRepository extends DataRepository<Person> {
   @override
   Map<String, dynamic> toJson(Person item) => item.toJson();
 
-  Person? getPersonById(String id) {
-    final persons = getAll();
+  Future<Person?> getPersonById(String id) async {
+    final persons = await getAll();
 
     for (var person in persons) {
       if (person.personId.trim().toLowerCase() == id.trim().toLowerCase()) {
-        return person; 
+        return person;
       }
     }
     return null;
@@ -30,7 +29,7 @@ class PersonRepository extends DataRepository<Person> {
   }
 
   @override
-  List<Person> getAll() {
+  Future<List<Person>> getAll() async {
     final file = File(filePath);
     if (!file.existsSync()) return [];
     final jsonString = file.readAsStringSync();
@@ -43,8 +42,8 @@ class PersonRepository extends DataRepository<Person> {
   }
 
   @override
-  void update(String personId, Person updateObject) {
-    var persons = getAll(); 
+  Future<void> update(String personId, Person updateObject) async {
+    var persons = await getAll();
 
     // Debugging: Print all loaded persons
     print("✅ Loaded persons:");
@@ -53,8 +52,7 @@ class PersonRepository extends DataRepository<Person> {
     }
 
     // Find index of the person
-    final index = persons
-        .indexWhere((person) => person.personId == personId);
+    final index = persons.indexWhere((person) => person.personId == personId);
 
     if (index == -1) {
       print("❌ Person with ID $personId not found.");

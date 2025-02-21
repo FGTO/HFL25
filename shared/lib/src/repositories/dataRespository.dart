@@ -8,7 +8,7 @@ abstract class DataRepository<T> {
 
   DataRepository(this.filePath);
 
-  List<T> getAll() {
+  Future<List<T>> getAll() async {
     final file = File(filePath);
     if (!file.existsSync()) return [];
     final jsonString = file.readAsStringSync();
@@ -16,20 +16,20 @@ abstract class DataRepository<T> {
     return jsonData.map((e) => fromJson(e)).toList();
   }
 
-  void saveAll(List<T> items) {
+  Future<void> saveAll(List<T> items) async {
     final file = File(filePath);
     final jsonString = json.encode(items.map((e) => toJson(e)).toList());
     file.writeAsStringSync(jsonString);
   }
 
-  void add(T item) {
-    final items = getAll();
+  Future< void> add(T item) async {
+    final items = await getAll();
     items.add(item);
-    saveAll(items);
+    await saveAll(items);
   }
 
-void update(String personId, T updateObject) {
-  var persons = getAll(); // Fetch the list from JSON file
+Future<void> update(String personId, T updateObject) async {
+  var persons = await getAll(); // Fetch the list from JSON file
 
   // Debugging: Print all loaded persons
   print("✅ Loaded persons:");
@@ -54,43 +54,8 @@ void update(String personId, T updateObject) {
   print("✅ Person found at index: $index");
 }
 
-/* void update(String personId, T updateObject) {
-  var persons = getAll();
-
-  // Convert personId to a string and check against the JSON values
-  final index = persons.indexWhere(
-    (person) =>
-        person is Map<String, dynamic> &&
-        person['personId'].toString() == personId,
-  );
-
-  print("Person index for $personId is: $index");
-
-  if (index == -1) {
-    print("❌ Person with ID $personId not found.");
-    return;
-  }
-
-  print("✅ Person found at index: $index");
-}
- */
-
-/*   void update(String id, dynamic updatedItem) {
-    final items = getAll();
-    final index = items.indexWhere((item) => getId(item) == id);
-
-    if (index != -1) {
-      items[index] =
-          updatedItem.toLowerCaseFields(); // Ensure lowercase before saving
-      saveAll(items);
-      print("Update successful!");
-    } else {
-      print("Person not found!");
-    }
-  } */
-
-  void delete(String id) {
-    final items = getAll();
+ Future<void> delete(String id) async {
+    final items = await getAll();
     int initialLength = items.length;
     items.removeWhere((item) {
       bool shouldRemove = getId(item).trim() == id.trim();
