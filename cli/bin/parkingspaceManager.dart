@@ -38,7 +38,7 @@ Future<void> parkingspaceMenu() async {
               number: number,
               isOccupied: false,
               parkingId: parkingId);
-          parkingspaceRepo.add(newSpace);
+          parkingspaceRepo.create(newSpace);
           break;
         case 2:
           stdout.writeln("List of parking spaces");

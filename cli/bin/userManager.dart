@@ -48,10 +48,6 @@ Future<void> userMenu() async {
                   "Invalid input. Only alphabetical letters are allowed. Try again.");
             }
           } while (!RegExp(r'^[a-zA-Z]+$').hasMatch(surname));
-
-          //Concatanate fullname
-          // String fullname = "$firstName $surname";
-
           do {
             stdout.write("Enter email: ");
             email = getUserStringInput();
@@ -62,7 +58,6 @@ Future<void> userMenu() async {
             }
           } while (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
               .hasMatch(email));
-
           do {
             stdout.write("Enter social security number: ");
             securityNum = getUserStringInput();
@@ -81,7 +76,7 @@ Future<void> userMenu() async {
               surname: surname,
               email: email,
               vehicleIds: []);
-          personRepo.add(newAddPerson);
+          personRepo.create(newAddPerson);
           break;
         case 2:
           stdout.writeln("List of users");

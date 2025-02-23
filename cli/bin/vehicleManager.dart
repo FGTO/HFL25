@@ -45,7 +45,7 @@ Future<void> vehcicleMenu() async {
               licensePlate: licensePlate,
               model: vehicleType.toString());
 
-          vehicleRepo.add(newVehicle);
+          vehicleRepo.create(newVehicle);
           break;
         case 2:
           stdout.writeln("List all vehicle");

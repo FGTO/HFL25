@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:shelf/shelf.dart';
@@ -8,7 +9,19 @@ import 'package:shelf_router/shelf_router.dart';
 final _router =
     Router()
       ..get('/', _rootHandler)
-      ..get('/echo/<message>', _echoHandler);
+      ..get('/echo/<message>', _echoHandler)
+      ..post('/person', _createUserHandler);
+
+Future<Response> _createUserHandler(Request request) async {
+  final data = await request.readAsString();
+  final json = jsonDecode(data);
+  // Alternativ
+  // Person person = Person.fromJson(json);
+  // print(person);
+  // return Response.ok(jsonEncode(person.toJson()));
+  print(json);
+  return Response.ok(jsonEncode(json));
+}
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');

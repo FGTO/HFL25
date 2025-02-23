@@ -45,7 +45,7 @@ Future<void> parkingMenu() async {
               name: name,
               location: location,
               parkingSpaceIds: parkingSpaceIds);
-          parkingRepo.add(newParking);
+          parkingRepo.create(newParking);
           break;
         case 2:
           stdout.writeln("List of parkings");

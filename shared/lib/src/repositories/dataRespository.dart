@@ -1,5 +1,3 @@
-library dataRepository;
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -22,7 +20,7 @@ abstract class DataRepository<T> {
     file.writeAsStringSync(jsonString);
   }
 
-  Future< void> add(T item) async {
+  Future< void> create(T item) async {
     final items = await getAll();
     items.add(item);
     await saveAll(items);
