@@ -10,7 +10,8 @@ final _router =
     Router()
       ..get('/', _rootHandler)
       ..get('/echo/<message>', _echoHandler)
-      ..post('/person', _createUserHandler);
+      ..post('/adduser', _createUserHandler);
+      // ..get('/getusers/<id>', _getUserByIdHandler);
 
 Future<Response> _createUserHandler(Request request) async {
   final data = await request.readAsString();
@@ -22,6 +23,11 @@ Future<Response> _createUserHandler(Request request) async {
   print(json);
   return Response.ok(jsonEncode(json));
 }
+
+/* Future<Response> _getUserByIdHandler(Request request, int id) async {
+  final data = await request.readAsString();
+
+} */
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');

@@ -31,7 +31,7 @@ class PersonRepository extends DataRepository<Person> {
   // READ operation
   @override
   Future<List<Person>> getAll() async {
-    final url = Uri.parse("https://localhost:${hostNumber}/getusers");
+    final url = Uri.parse("https://localhost:$hostNumber/getusers");
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -47,34 +47,62 @@ class PersonRepository extends DataRepository<Person> {
     }
   }
 
+// Get user by id
+
+  Future<Person?> getById(String id) async {
+    final url = Uri.parse("https://localhost:$hostNumber/getuser/$id");
+    final response = await http.get(url);
+    
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = jsonDecode(response.body);
+      return Person.fromJson(jsonData);
+    } else if (response.statusCode == 404) {
+      return null; // Return null if user is not found
+    } else {
+      throw Exception("Failed to load user: ${response.statusCode}");
+    }
+  }
+
   // UPDATE operation
   @override
-  Future<void> update(String id, Person updatedPerson) async {
-    final url = Uri.parse("https://localhost:${hostNumber}/updateuser/$id");
-    final response = await http.put(
+  Future<void> update(String personId, Person updateObject) async {
+    final url = Uri.parse("https://localhost:8081/updateuser/$personId");
+
+    print("🔍 Sending PATCH request to update person with ID: $personId");
+
+    final response = await http.patch(
       url,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: jsonEncode(updatedPerson.toJson()),
+      body: json.encode(updateObject), // Convert updateObject to JSON
     );
+
     if (response.statusCode == 200) {
-      print("✅ Person updated successfully.");
+      print("✅ Person with ID $personId updated successfully.");
     } else {
-      throw Exception("❌ Failed to update person: ${response.statusCode}");
+      print("❌ Failed to update person: ${response.statusCode}");
+      print("Server response: ${response.body}");
     }
   }
 
 // DELETE operation
-  Future<Person?> getPersonById(String id) async {
-    final persons = await getAll();
+  @override
+  Future<void> delete(String id) async {
+    final url = Uri.parse("https://localhost:$hostNumber/deleteuser/$id");
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
-    for (var person in persons) {
-      if (person.personId.trim().toLowerCase() == id.trim().toLowerCase()) {
-        return person;
-      }
+    if (response.statusCode == 200) {
+      print("✅ Person with ID $id deleted successfully.");
+    } else {
+      print("❌ Failed to delete person: ${response.statusCode}");
+      print("Server response: ${response.body}");
     }
-    return null;
   }
 
   @override
@@ -82,6 +110,7 @@ class PersonRepository extends DataRepository<Person> {
     return person.personId;
   }
 
+// Local update operation
   /* @override
   Future<void> update(String personId, Person updateObject) async {
     var persons = await getAll();

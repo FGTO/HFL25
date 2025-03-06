@@ -5,7 +5,7 @@ import 'parkingspaceManager.dart';
 import 'parkingManager.dart';
 import '../utils/helperFunctions.dart';
 
-void main() {
+ void main() {
   // readFile();
   stdout.writeln("-----------------------------------");
   stdout.write("Enter a number (1-5) or 'q' to quit: ");
@@ -43,8 +43,8 @@ void main() {
     }
   }
 }
-
-void printMainMenu() {
+ 
+ void printMainMenu() {
   stdout.writeln();
   stdout.writeln("1. User");
   stdout.writeln("2. Vehicle");

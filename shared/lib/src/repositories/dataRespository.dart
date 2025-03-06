@@ -27,12 +27,12 @@ abstract class DataRepository<T> {
   }
 
 Future<void> update(String personId, T updateObject) async {
-  var persons = await getAll(); // Fetch the list from JSON file
+  var persons = await getAll();
 
   // Debugging: Print all loaded persons
   print("✅ Loaded persons:");
   for (var person in persons) {
-    print(person);  // Ensure the structure is correct
+    print(person); 
   }
 
   final index = persons.indexWhere(

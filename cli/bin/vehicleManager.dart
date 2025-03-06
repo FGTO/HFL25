@@ -87,7 +87,7 @@ Future<void> vehcicleMenu() async {
           }
           break;
         case 5:
-          stdout.writeln("Delete user");
+          stdout.writeln("Delete vehicle");
           stdout.writeln("Enter license plate to delete: ");
           String plate = getUserStringInput().trim();
           final vehicle = await vehicleRepo.getVehicleById(plate);
