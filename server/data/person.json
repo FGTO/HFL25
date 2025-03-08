@@ -22,5 +22,13 @@
     "surname": "Carinsson",
     "email": "carin@mail.com",
     "vehicleIds": []
+  },
+  {
+    "personUuid": "47a5de32-12ea-4bd8-a893-bd192f5427ef",
+    "personId": "1122334455",
+    "firstName": "Test",
+    "surname": "TestEfter",
+    "email": "test@mail.com",
+    "vehicleIds": []
   }
 ]

@@ -15,7 +15,7 @@ Future<void> userMenu() async {
     stdout.writeln("4. Update user information");
     stdout.writeln("5. Delete user");
     stdout.writeln("6. Return to main menu");
-    stdout.writeln("Choose one option (1-6): ");
+    stdout.write("Choose one option (1-6): ");
 
     String firstName;
     String surname;
@@ -76,7 +76,15 @@ Future<void> userMenu() async {
               surname: surname,
               email: email,
               vehicleIds: []);
-          await personRepo.create(newAddPerson);
+          try {
+            await personRepo.create(newAddPerson);
+            stdout.writeln("");
+            stdout.writeln("User successfully created!");
+          } catch (e, stackTrace) {
+            stderr.writeln("Error creating user: $e");
+            stderr.writeln(stackTrace);
+          }
+
           break;
         case 2:
           stdout.writeln("List of users");

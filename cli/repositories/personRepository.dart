@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 // import 'dart:io';
 
 import 'package:http/http.dart';
@@ -17,8 +18,76 @@ class PersonRepository extends DataRepository<Person> {
   Map<String, dynamic> toJson(Person item) => item.toJson();
 
 // CREATE operation
-  @override
+@override
+Future<Person> create(Person person) async {
+  try {
+    // stdout.writeln("Before calling server");
+    final url = Uri.parse("http://localhost:8081/adduser");
+    // final url = Uri.parse("http://127.0.0.1:8081/adduser");
+
+
+    String jsonBody = jsonEncode(person.toJson());
+    // stdout.writeln("Request Body: $jsonBody");
+
+    Response response = await http
+        .post(url, headers: {'Content-Type': 'application/json'}, body: jsonBody)
+        .timeout(const Duration(seconds: 10));
+
+   /*  stdout.writeln("After HTTP request");
+    stdout.writeln("Response Status: ${response.statusCode}");
+    stdout.writeln("Response Body: ${response.body}"); */
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to add person: ${response.statusCode}");
+    }
+
+    // stdout.writeln("Decoding JSON...");
+    final json = jsonDecode(response.body);
+    // stdout.writeln("JSON Decoded Successfully!");
+
+    return Person.fromJson(json);
+  } catch (e, stackTrace) {
+    stderr.writeln("Error in create method: $e");
+    stderr.writeln(stackTrace);
+    rethrow;
+  }
+}
+
+/* @override
+Future<Person> create(Person person) async {
+  try {
+    stdout.writeln("Before calling server");
+    final url = Uri.parse("http://localhost:8081/adduser"); // Ensure it's HTTP, not HTTPS
+
+    String jsonBody = jsonEncode(person.toJson());
+    stdout.writeln("Request Body: $jsonBody");
+
+    Response response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonBody,
+    );
+
+    stdout.writeln("Response Status: ${response.statusCode}");
+    stdout.writeln("Response Body: ${response.body}");
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to add person: ${response.statusCode}");
+    }
+
+    final json = jsonDecode(response.body);
+    return Person.fromJson(json);
+  } catch (e, stackTrace) {
+    stderr.writeln("Error in create method: $e");
+    stderr.writeln(stackTrace);
+    rethrow;
+  }
+}
+ */
+
+/*   @override
   Future<Person> create(Person person) async {
+    stdout.writeln("Before calling server");
     final url = Uri.parse("https://localhost:8081/adduser");
     Response response = await http.post(url,
         headers: {'Content-Type': 'application/json'},
@@ -26,7 +95,7 @@ class PersonRepository extends DataRepository<Person> {
 
     final json = await jsonDecode(response.body);
     return Person.fromJson(json);
-  }
+  } */
 
   // READ operation
   @override

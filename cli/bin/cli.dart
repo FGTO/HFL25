@@ -5,24 +5,22 @@ import 'parkingspaceManager.dart';
 import 'parkingManager.dart';
 import '../utils/helperFunctions.dart';
 
- void main() {
+ void main() async {
   // readFile();
   stdout.writeln("-----------------------------------");
   stdout.write("Enter a number (1-5) or 'q' to quit: ");
   while (true) {
   printMainMenu();
     String? input = getUserStringInput();
-
     if (input.toLowerCase() == 'q') {
       print("Exiting...");
       break;
     }
-
     int? number = int.tryParse(input);
     if (number != null && number >= 1 && number <= 5) {
       switch (int.tryParse(input) ?? -1) {
         case 1:
-          userMenu();
+          await userMenu();
           break;
         case 2:
           vehcicleMenu();
