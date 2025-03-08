@@ -1,4 +1,4 @@
-import '../lib/assignment_1.dart';
+import 'package:cli/assignment_1.dart';
 import 'package:test/test.dart';
 
 void main() {

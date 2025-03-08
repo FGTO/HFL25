@@ -18,90 +18,51 @@ class PersonRepository extends DataRepository<Person> {
   Map<String, dynamic> toJson(Person item) => item.toJson();
 
 // CREATE operation
-@override
-Future<Person> create(Person person) async {
-  try {
-    // stdout.writeln("Before calling server");
-    final url = Uri.parse("http://localhost:8081/adduser");
-    // final url = Uri.parse("http://127.0.0.1:8081/adduser");
+  @override
+  Future<Person> create(Person person) async {
+    try {
+      // stdout.writeln("Before calling server");
+      final url = Uri.parse("http://localhost:8081/adduser");
+      // final url = Uri.parse("http://127.0.0.1:8081/adduser");
 
+      String jsonBody = jsonEncode(person.toJson());
+      // stdout.writeln("Request Body: $jsonBody");
 
-    String jsonBody = jsonEncode(person.toJson());
-    // stdout.writeln("Request Body: $jsonBody");
+      Response response = await http
+          .post(url,
+              headers: {'Content-Type': 'application/json'}, body: jsonBody)
+          .timeout(const Duration(seconds: 10));
 
-    Response response = await http
-        .post(url, headers: {'Content-Type': 'application/json'}, body: jsonBody)
-        .timeout(const Duration(seconds: 10));
-
-   /*  stdout.writeln("After HTTP request");
+      /*  stdout.writeln("After HTTP request");
     stdout.writeln("Response Status: ${response.statusCode}");
     stdout.writeln("Response Body: ${response.body}"); */
 
-    if (response.statusCode != 200) {
-      throw Exception("Failed to add person: ${response.statusCode}");
+      if (response.statusCode != 200) {
+        throw Exception("Failed to add person: ${response.statusCode}");
+      }
+
+      // stdout.writeln("Decoding JSON...");
+      final json = jsonDecode(response.body);
+      // stdout.writeln("JSON Decoded Successfully!");
+
+      return Person.fromJson(json);
+    } catch (e, stackTrace) {
+      stderr.writeln("Error in create method: $e");
+      stderr.writeln(stackTrace);
+      rethrow;
     }
-
-    // stdout.writeln("Decoding JSON...");
-    final json = jsonDecode(response.body);
-    // stdout.writeln("JSON Decoded Successfully!");
-
-    return Person.fromJson(json);
-  } catch (e, stackTrace) {
-    stderr.writeln("Error in create method: $e");
-    stderr.writeln(stackTrace);
-    rethrow;
   }
-}
-
-/* @override
-Future<Person> create(Person person) async {
-  try {
-    stdout.writeln("Before calling server");
-    final url = Uri.parse("http://localhost:8081/adduser"); // Ensure it's HTTP, not HTTPS
-
-    String jsonBody = jsonEncode(person.toJson());
-    stdout.writeln("Request Body: $jsonBody");
-
-    Response response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonBody,
-    );
-
-    stdout.writeln("Response Status: ${response.statusCode}");
-    stdout.writeln("Response Body: ${response.body}");
-
-    if (response.statusCode != 200) {
-      throw Exception("Failed to add person: ${response.statusCode}");
-    }
-
-    final json = jsonDecode(response.body);
-    return Person.fromJson(json);
-  } catch (e, stackTrace) {
-    stderr.writeln("Error in create method: $e");
-    stderr.writeln(stackTrace);
-    rethrow;
-  }
-}
- */
-
-/*   @override
-  Future<Person> create(Person person) async {
-    stdout.writeln("Before calling server");
-    final url = Uri.parse("https://localhost:8081/adduser");
-    Response response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(person.toJson()));
-
-    final json = await jsonDecode(response.body);
-    return Person.fromJson(json);
-  } */
 
   // READ operation
   @override
   Future<List<Person>> getAll() async {
-    final url = Uri.parse("https://localhost:$hostNumber/getusers");
+    // final url = Uri.parse("https://localhost:$hostNumber/getusers");
+    stdout.writeln("Run getALL");
+    final url = Uri.parse("http://127.0.0.1:8081/getusers");
+
+    // stdout.writeln("Before get request");
     final response = await http.get(url);
+    // stdout.writeln("Response body: ${response.body}");
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData =
@@ -121,7 +82,7 @@ Future<Person> create(Person person) async {
   Future<Person?> getById(String id) async {
     final url = Uri.parse("https://localhost:$hostNumber/getuser/$id");
     final response = await http.get(url);
-    
+
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
       return Person.fromJson(jsonData);
