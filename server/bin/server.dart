@@ -11,7 +11,39 @@ final _router =
       ..get('/', _rootHandler)
       ..get('/echo/<message>', _echoHandler)
       ..post('/adduser', _createUserHandler)
-      ..get('/getusers', _getAllUserHandler);
+      ..get('/getusers', _getAllUserHandler)
+      ..get('/getuser/<id>', _getUserById);
+
+/* Future<Response> _getUserById(Request request, String id) async {
+  print("🔹 _getUserById called with ID: $id");  // Debug log
+  return Response.ok(jsonEncode({"message": "Test response"}));
+} */
+
+Future<Response> _getUserById(Request request, String id) async {
+  stdout.writeln('Stage 1');
+  final file = File('data/person.json');
+  List<dynamic> users = [];
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      users = jsonDecode(contents);
+    }
+  }
+  //Searching for personId that match the id arg.
+  final user = users.firstWhere(
+    (user) => user['personId'].toString() == id,
+    orElse: () => null,
+  );
+  stdout.writeln('User $user');
+  if (user == null) {
+    return Response.notFound(jsonEncode({'error': 'User not found'}));
+  }
+
+  return Response.ok(
+    jsonEncode(user),
+    headers: {'Content-Type': 'application/json'},
+  );
+}
 
 Future<Response> _getAllUserHandler(Request request) async {
   final file = File('data/person.json');
@@ -24,7 +56,7 @@ Future<Response> _getAllUserHandler(Request request) async {
       users = jsonDecode(contents);
     }
   }
-  
+
   return Response.ok(
     jsonEncode(users),
     headers: {'Content-Type': 'application/json'},
@@ -83,6 +115,7 @@ void main(List<String> args) async {
   print(" - GET /echo/<message>");
   print(" - POST /adduser");
   print(" - GET /getusers");
+  print(" - GET /getuser/<id>");
 
   final handler = Pipeline()
       .addMiddleware(logRequests())

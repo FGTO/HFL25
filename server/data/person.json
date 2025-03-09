@@ -30,5 +30,13 @@
     "surname": "TestEfter",
     "email": "test@mail.com",
     "vehicleIds": []
+  },
+  {
+    "personUuid": "2e768a58-a53c-4ea5-a6ab-1ab402fbdd78",
+    "personId": "2233448899",
+    "firstName": "Bengt",
+    "surname": "Bengtsson",
+    "email": "bengt@mail.com",
+    "vehicleIds": []
   }
 ]

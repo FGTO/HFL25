@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 String hostNumber = "8081";
 
 class PersonRepository extends DataRepository<Person> {
-  PersonRepository([super.filePath = 'storage/person.json']);
+  PersonRepository([super.filePath = 'data/person.json']);
 
   @override
   Person fromJson(Map<String, dynamic> json) => Person.fromJson(json);
@@ -57,8 +57,8 @@ class PersonRepository extends DataRepository<Person> {
   @override
   Future<List<Person>> getAll() async {
     // final url = Uri.parse("https://localhost:$hostNumber/getusers");
-    stdout.writeln("Run getALL");
-    final url = Uri.parse("http://127.0.0.1:8081/getusers");
+    // stdout.writeln("Run getALL");
+    final url = Uri.parse("http://localhost:$hostNumber/getusers");
 
     // stdout.writeln("Before get request");
     final response = await http.get(url);
@@ -78,9 +78,8 @@ class PersonRepository extends DataRepository<Person> {
   }
 
 // Get user by id
-
   Future<Person?> getById(String id) async {
-    final url = Uri.parse("https://localhost:$hostNumber/getuser/$id");
+    final url = Uri.parse("http://localhost:$hostNumber/getuser/$id");
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -96,7 +95,7 @@ class PersonRepository extends DataRepository<Person> {
   // UPDATE operation
   @override
   Future<void> update(String personId, Person updateObject) async {
-    final url = Uri.parse("https://localhost:8081/updateuser/$personId");
+    final url = Uri.parse("http://localhost:8081/updateuser/$personId");
 
     print("🔍 Sending PATCH request to update person with ID: $personId");
 
