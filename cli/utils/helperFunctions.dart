@@ -14,7 +14,6 @@ String securityNumberCheck(String inputSecurityNumber) {
   } else if (inputSecurityNumber.length >= 13) {
     return "Social security number is too long. Try again.";
   }
-
   return "";
 }
 

@@ -31,7 +31,7 @@ Future<void> parkingspaceMenu() async {
           String parkingId = getUserStringInput();
 
           stdout.write("Enter number for the parking space");
-          String number = getUserStringInput();
+          String number =getUserStringInput();
 
           Parkingspace newSpace = Parkingspace(
               parkingSpaceId: parkingSpaceId,
@@ -79,7 +79,7 @@ Future<void> parkingspaceMenu() async {
         case 5:
         stdout.writeln("Delete parking space");
           stdout.writeln("Enter parking space id: ");
-          String parkingSpaceId = getUserStringInput().trim();
+          String parkingSpaceId = (getUserStringInput()).trim();
           final parkingspace = await parkingspaceRepo.getSpaceById(parkingSpaceId);
           if (parkingspace != null) {
             stdout.write("Are you sure you want to delete: ");

@@ -97,21 +97,26 @@ class PersonRepository extends DataRepository<Person> {
   Future<void> update(String personId, Person updateObject) async {
     final url = Uri.parse("http://localhost:8081/updateuser/$personId");
 
-    print("🔍 Sending PATCH request to update person with ID: $personId");
+    print("Sending PATCH request to update person with ID: $personId");
+    print("Payload: ${json.encode(updateObject)}");
 
-    final response = await http.patch(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: json.encode(updateObject), // Convert updateObject to JSON
-    );
+    try {
+      final response = await http.patch(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(updateObject),
+      );
 
-    if (response.statusCode == 200) {
-      print("✅ Person with ID $personId updated successfully.");
-    } else {
-      print("❌ Failed to update person: ${response.statusCode}");
+      print("Received response status: ${response.statusCode}");
       print("Server response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        print("✅ Person with ID $personId updated successfully.");
+      } else {
+        print("❌ Failed to update person: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("⚠️ Error during PATCH request: $e");
     }
   }
 

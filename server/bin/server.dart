@@ -5,22 +5,66 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+void main(List<String> args) async {
+  final ip = InternetAddress.anyIPv4;
+  final port = int.parse(Platform.environment['PORT'] ?? '8081');
+
+  print("✅ Registered routes:");
+  print(" - GET /");
+  print(" - GET /echo/<message>");
+  print(" - POST /adduser");
+  print(" - GET /getusers");
+  print(" - GET /getuser/<id>");
+  print(" - PATCH /updateuser/<id>");
+
+  final handler = Pipeline()
+      .addMiddleware(logRequests())
+      .addHandler(_router.call);
+  final server = await serve(handler, ip, port);
+
+  print('🚀 Server listening on port ${server.port}');
+}
 // Configure routes.
 final _router =
     Router()
       ..get('/', _rootHandler)
-      ..get('/echo/<message>', _echoHandler)
-      ..post('/adduser', _createUserHandler)
+      ..get('/getuser/<id>', _getUserById)
       ..get('/getusers', _getAllUserHandler)
-      ..get('/getuser/<id>', _getUserById);
+      ..post('/adduser', _createUserHandler)
+      ..patch('/updateuser/<id>', _updateUserHandler);
 
-/* Future<Response> _getUserById(Request request, String id) async {
-  print("🔹 _getUserById called with ID: $id");  // Debug log
-  return Response.ok(jsonEncode({"message": "Test response"}));
-} */
+
+Future<Response> _updateUserHandler(Request request, String id) async {
+  final file = File('data/person.json');
+  List<dynamic> users = [];
+
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      users = jsonDecode(contents);
+    }
+  }
+
+  final userIndex = users.indexWhere((user) => user['personId'].toString() == id);
+
+  if (userIndex == -1) {
+    return Response.notFound(jsonEncode({'message': 'User not found'}));
+  }
+
+  final Map<String, dynamic> payload = jsonDecode(await request.readAsString());
+
+  // Ensure we are working with a Map<String, dynamic>
+  final Map<String, dynamic> existingUser = users[userIndex] as Map<String, dynamic>;
+
+  // Merge existing user data with new data
+  users[userIndex] = {...existingUser, ...payload};
+
+  await file.writeAsString(jsonEncode(users));
+
+  return Response.ok(jsonEncode(users[userIndex]));
+}
 
 Future<Response> _getUserById(Request request, String id) async {
-  stdout.writeln('Stage 1');
   final file = File('data/person.json');
   List<dynamic> users = [];
   if (await file.exists()) {
@@ -101,35 +145,3 @@ Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
 }
 
-Response _echoHandler(Request request) {
-  final message = request.params['message'];
-  return Response.ok('$message\n');
-}
-
-void main(List<String> args) async {
-  final ip = InternetAddress.anyIPv4;
-  final port = int.parse(Platform.environment['PORT'] ?? '8081');
-
-  print("✅ Registered routes:");
-  print(" - GET /");
-  print(" - GET /echo/<message>");
-  print(" - POST /adduser");
-  print(" - GET /getusers");
-  print(" - GET /getuser/<id>");
-
-  final handler = Pipeline()
-      .addMiddleware(logRequests())
-      .addHandler(_router.call);
-  final server = await serve(handler, ip, port);
-
-  print('🚀 Server listening on port ${server.port}');
-}
-
-/* void main(List<String> args) async {
-  final ip = InternetAddress.anyIPv4;
-  final handler = Pipeline().addMiddleware(logRequests()).addHandler(_router.call);
-
-  final port = int.parse(Platform.environment['PORT'] ?? '8081');
-  final server = await serve(handler, ip, port);
-  print('Server listening on port ${server.port}');
-} */

@@ -95,7 +95,7 @@ Future<void> parkingMenu() async {
         case 5:
           stdout.writeln("Delete parking");
           stdout.writeln("Enter parking id: ");
-          String parkingId = getUserStringInput().trim();
+          String parkingId = (getUserStringInput()).trim();
           final parking = await parkingRepo.getParkingById(parkingId);
 
           if (parking != null) {

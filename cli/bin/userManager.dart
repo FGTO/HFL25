@@ -28,7 +28,7 @@ Future<void> userMenu() async {
     if (menuNum != null && menuNum >= 1 && menuNum <= 6) {
       var uuid = Uuid();
       var personRepo = PersonRepository();
-      switch (menuNum) {
+      switch (menuNum){
         case 1:
           //Prompt for firstname.
           do {
@@ -116,7 +116,7 @@ Future<void> userMenu() async {
           final person = await personRepo.getById(securityNum);
           if (person != null) {
             print("Edit: ${person.firstName} ${person.surname}");
-            editPersonMenu(person);
+            await editPersonMenu(person, personRepo);
           } else {
             print("Can't find any user with $securityNum in the database");
           }
@@ -124,7 +124,7 @@ Future<void> userMenu() async {
         case 5:
           stdout.writeln("Delete user");
           stdout.writeln("Enter user's social security number to delete: ");
-          String sec = getUserStringInput().trim();
+          String sec = (getUserStringInput()).trim();
           final person = await personRepo.getById(sec);
           if (person != null) {
             stdout.write("Are you sure you want to delete: ");
@@ -150,7 +150,7 @@ Future<void> userMenu() async {
   }
 }
 
-void editPersonMenu(Person person) {
+ editPersonMenu(Person person, PersonRepository personRepo) async {
   while (true) {
     stdout.writeln();
     stdout.writeln("1. Edit firstname");
@@ -159,7 +159,6 @@ void editPersonMenu(Person person) {
     stdout.writeln("4. Return to user menu");
     stdout.writeln("Choose one option (1-4): ");
 
-    var updateRepo = PersonRepository();
     String editPersonMenuOpt = getUserStringInput();
     switch (editPersonMenuOpt) {
       case "1":
@@ -172,9 +171,8 @@ void editPersonMenu(Person person) {
             surname: person.surname,
             email: person.email,
             vehicleIds: person.vehicleIds);
-        updateRepo.update(person.personId, updatePersonInfo);
+        await personRepo.update(person.personId, updatePersonInfo);
         break;
-
       case "2":
         stdout.write("Enter new surname: ");
         String updatedSurname = getUserStringInput();
@@ -185,9 +183,8 @@ void editPersonMenu(Person person) {
             surname: updatedSurname,
             email: person.email,
             vehicleIds: person.vehicleIds);
-        updateRepo.update(person.personUuid, updatePersonInfo);
+        await personRepo.update(person.personUuid, updatePersonInfo);
         break;
-
       case "3":
         stdout.write("Enter new email: ");
         String updatedEmail = getUserStringInput();
@@ -198,9 +195,8 @@ void editPersonMenu(Person person) {
             surname: person.surname,
             email: updatedEmail,
             vehicleIds: person.vehicleIds);
-        updateRepo.update(person.personUuid, updatePersonInfo);
+        await personRepo.update(person.personUuid, updatePersonInfo);
         break;
-
       case "4":
         return;
       default:
