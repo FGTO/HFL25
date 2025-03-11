@@ -4,7 +4,6 @@
 library;
 
 export 'src/shared_base.dart';
-
 export 'src/Models/personModel.dart';
 export 'src/Models/vehicleModel.dart';
 export 'src/Models/parkingspaceModel.dart';

@@ -20,39 +20,39 @@ abstract class DataRepository<T> {
     file.writeAsStringSync(jsonString);
   }
 
-  Future< void> create(T item) async {
+  Future<void> create(T item) async {
     final items = await getAll();
     items.add(item);
     await saveAll(items);
   }
 
-Future<void> update(String personId, T updateObject) async {
-  var persons = await getAll();
+  Future<void> update(String personId, T updateObject) async {
+    var persons = await getAll();
 
-  // Debugging: Print all loaded persons
-  print("✅ Loaded persons:");
-  for (var person in persons) {
-    print(person); 
+    // Debugging: Print all loaded persons
+    print("✅ Loaded persons:");
+    for (var person in persons) {
+      print(person);
+    }
+
+    final index = persons.indexWhere(
+      (person) =>
+          person is Map<String, dynamic> &&
+          person['personId'].toString() == personId,
+    );
+
+    print("🔍 Searching for personId: $personId");
+    print("🔎 Found index: $index");
+
+    if (index == -1) {
+      print("❌ Person with ID $personId not found.");
+      return;
+    }
+
+    print("✅ Person found at index: $index");
   }
 
-  final index = persons.indexWhere(
-    (person) =>
-        person is Map<String, dynamic> && 
-        person['personId'].toString() == personId,
-  );
-
-  print("🔍 Searching for personId: $personId");
-  print("🔎 Found index: $index");
-
-  if (index == -1) {
-    print("❌ Person with ID $personId not found.");
-    return;
-  }
-
-  print("✅ Person found at index: $index");
-}
-
- Future<void> delete(String id) async {
+  Future<void> delete(String id) async {
     final items = await getAll();
     int initialLength = items.length;
     items.removeWhere((item) {
@@ -78,4 +78,3 @@ Future<void> update(String personId, T updateObject) async {
   Map<String, dynamic> toJson(T item);
   String getId(T item);
 }
-

@@ -28,7 +28,7 @@ Future<void> userMenu() async {
     if (menuNum != null && menuNum >= 1 && menuNum <= 6) {
       var uuid = Uuid();
       var personRepo = PersonRepository();
-      switch (menuNum){
+      switch (menuNum) {
         case 1:
           //Prompt for firstname.
           do {
@@ -132,7 +132,7 @@ Future<void> userMenu() async {
                 'Deleting : ${person.firstName} ${person.surname} - ${person.email} ? (y/n)');
             String deleting = getUserStringInput();
             if (deleting.toLowerCase() == 'y') {
-              personRepo.delete(sec);
+              await personRepo.delete(sec);
             } else {
               print("Can't find anyone with this social security number.");
               break;
@@ -150,7 +150,7 @@ Future<void> userMenu() async {
   }
 }
 
- editPersonMenu(Person person, PersonRepository personRepo) async {
+editPersonMenu(Person person, PersonRepository personRepo) async {
   while (true) {
     stdout.writeln();
     stdout.writeln("1. Edit firstname");

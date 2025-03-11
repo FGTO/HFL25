@@ -123,19 +123,24 @@ class PersonRepository extends DataRepository<Person> {
 // DELETE operation
   @override
   Future<void> delete(String id) async {
-    final url = Uri.parse("https://localhost:$hostNumber/deleteuser/$id");
-    final response = await http.delete(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      print("✅ Person with ID $id deleted successfully.");
-    } else {
-      print("❌ Failed to delete person: ${response.statusCode}");
-      print("Server response: ${response.body}");
+    final url = Uri.parse("http://localhost:$hostNumber/deleteuser/$id");
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        print("✅ Person with ID $id deleted successfully.");
+      } else {
+        final errorMessage =
+            response.body.isNotEmpty ? response.body : "Unknown error";
+        print(
+            "❌ Failed to delete person: ${response.statusCode}): $errorMessage");
+      }
+    } catch (e) {
+      print("❌ Exception occurered while deleting person: $e");
     }
   }
 

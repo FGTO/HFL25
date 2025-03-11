@@ -16,7 +16,7 @@ void main(List<String> args) async {
   print(" - GET /getusers");
   print(" - GET /getuser/<id>");
   print(" - PATCH /updateuser/<id>");
-
+  print(" - DELETE /deleteuser/<id>");
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addHandler(_router.call);
@@ -24,15 +24,42 @@ void main(List<String> args) async {
 
   print('🚀 Server listening on port ${server.port}');
 }
+
 // Configure routes.
 final _router =
     Router()
       ..get('/', _rootHandler)
-      ..get('/getuser/<id>', _getUserById)
+      ..get('/getuser/<id>', _getUserByIdHandler)
       ..get('/getusers', _getAllUserHandler)
       ..post('/adduser', _createUserHandler)
-      ..patch('/updateuser/<id>', _updateUserHandler);
+      ..patch('/updateuser/<id>', _updateUserHandler)
+      ..delete('/deleteuser/<id>', _deleteUserHandler);
 
+Future<Response> _deleteUserHandler(Request request, String id) async {
+  final file = File('data/person.json');
+  List<dynamic> users = [];
+
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      users = jsonDecode(contents);
+    }
+  }
+
+  final userIndex = users.indexWhere(
+    (user) => user["personId"].toString() == id,
+  );
+
+  if (userIndex == -1) {
+    return Response.notFound(jsonEncode({'message': 'User not found'}));
+  }
+
+  //Remove the user from the list
+  users.removeAt(userIndex);
+  await file.writeAsString(jsonEncode(users));
+
+  return Response.ok(jsonEncode({'message': 'User deleted successfully'}));
+}
 
 Future<Response> _updateUserHandler(Request request, String id) async {
   final file = File('data/person.json');
@@ -45,7 +72,9 @@ Future<Response> _updateUserHandler(Request request, String id) async {
     }
   }
 
-  final userIndex = users.indexWhere((user) => user['personId'].toString() == id);
+  final userIndex = users.indexWhere(
+    (user) => user['personId'].toString() == id,
+  );
 
   if (userIndex == -1) {
     return Response.notFound(jsonEncode({'message': 'User not found'}));
@@ -54,7 +83,8 @@ Future<Response> _updateUserHandler(Request request, String id) async {
   final Map<String, dynamic> payload = jsonDecode(await request.readAsString());
 
   // Ensure we are working with a Map<String, dynamic>
-  final Map<String, dynamic> existingUser = users[userIndex] as Map<String, dynamic>;
+  final Map<String, dynamic> existingUser =
+      users[userIndex] as Map<String, dynamic>;
 
   // Merge existing user data with new data
   users[userIndex] = {...existingUser, ...payload};
@@ -64,7 +94,7 @@ Future<Response> _updateUserHandler(Request request, String id) async {
   return Response.ok(jsonEncode(users[userIndex]));
 }
 
-Future<Response> _getUserById(Request request, String id) async {
+Future<Response> _getUserByIdHandler(Request request, String id) async {
   final file = File('data/person.json');
   List<dynamic> users = [];
   if (await file.exists()) {
@@ -144,4 +174,3 @@ Future<Response> _createUserHandler(Request request) async {
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
 }
-
