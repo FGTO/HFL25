@@ -45,12 +45,12 @@ Future<void> vehcicleMenu() async {
               licensePlate: licensePlate,
               model: vehicleType.toString());
 
-          vehicleRepo.create(newVehicle);
+          await vehicleRepo.create(newVehicle);
           break;
         case 2:
           stdout.writeln("List all vehicle");
           stdout.writeln("__________________________");
-          final vehicles =await vehicleRepo.getAll();
+          final vehicles = await vehicleRepo.getAll();
           for (var vehicle in vehicles) {
             print("${vehicle.licensePlate} ${vehicle.ownerId}");
           }
@@ -92,18 +92,20 @@ Future<void> vehcicleMenu() async {
           String plate = (getUserStringInput()).trim();
           final vehicle = await vehicleRepo.getVehicleById(plate);
           if (vehicle != null) {
-            stdout.write("Are you sure you want to delete this vehicle ${vehicle.licensePlate}: ");
+            stdout.write(
+                "Are you sure you want to delete this vehicle ${vehicle.licensePlate}: ");
             stdout.write('Deleting ? (y/n)');
             String deleting = getUserStringInput();
             if (deleting.toLowerCase() == 'y') {
               vehicleRepo.delete(plate);
             } else {
-              print("Can't find vehicle with this vehicle with this ${vehicle.licensePlate} licesen plate.");
+              print(
+                  "Can't find vehicle with this vehicle with this ${vehicle.licensePlate} licesen plate.");
               break;
             }
             break;
           }
-          case 6:
+        case 6:
           return;
         default:
           stdout.writeln("Something went wrong. Try again.");

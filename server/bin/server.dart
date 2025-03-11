@@ -10,13 +10,13 @@ void main(List<String> args) async {
   final port = int.parse(Platform.environment['PORT'] ?? '8081');
 
   print("✅ Registered routes:");
-  print(" - GET /");
-  print(" - GET /echo/<message>");
-  print(" - POST /adduser");
   print(" - GET /getusers");
   print(" - GET /getuser/<id>");
+  print(" - POST /adduser");
   print(" - PATCH /updateuser/<id>");
   print(" - DELETE /deleteuser/<id>");
+
+  print(" - GET /getvehicle");
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addHandler(_router.call);
@@ -29,11 +29,16 @@ void main(List<String> args) async {
 final _router =
     Router()
       ..get('/', _rootHandler)
-      ..get('/getuser/<id>', _getUserByIdHandler)
       ..get('/getusers', _getAllUserHandler)
+      ..get('/getuser/<id>', _getUserByIdHandler)
       ..post('/adduser', _createUserHandler)
       ..patch('/updateuser/<id>', _updateUserHandler)
-      ..delete('/deleteuser/<id>', _deleteUserHandler);
+      ..delete('/deleteuser/<id>', _deleteUserHandler)
+
+      ..get('/getvehicle', _getVehicleHandler);
+Future<Response> _getVehicleHandler(Request request) async {
+  return Response(200);
+}
 
 Future<Response> _deleteUserHandler(Request request, String id) async {
   final file = File('data/person.json');
@@ -94,6 +99,40 @@ Future<Response> _updateUserHandler(Request request, String id) async {
   return Response.ok(jsonEncode(users[userIndex]));
 }
 
+Future<Response> _createUserHandler(Request request) async {
+  try {
+    final data = await request.readAsString();
+    // stdout.writeln("Received Data: $data");
+
+    final json = jsonDecode(data);
+    // stdout.writeln("Decoded JSON: $json");
+
+    final file = File('data/person.json');
+    // stdout.writeln("File Path: ${file.path}");
+
+    List<dynamic> users = [];
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+      // stdout.writeln("Existing File Contents: $contents");
+
+      if (contents.isNotEmpty) {
+        users = jsonDecode(contents);
+      }
+    }
+
+    users.add(json); // Add new user entry
+
+    await file.writeAsString(jsonEncode(users), mode: FileMode.write); // Save
+    stdout.writeln("User added successfully");
+
+    return Response.ok(jsonEncode(json)); // Return added user
+  } catch (e, stackTrace) {
+    stderr.writeln("Error in _createUserHandler: $e");
+    stderr.writeln(stackTrace);
+    return Response.internalServerError(body: 'Server error');
+  }
+}
+
 Future<Response> _getUserByIdHandler(Request request, String id) async {
   final file = File('data/person.json');
   List<dynamic> users = [];
@@ -135,40 +174,6 @@ Future<Response> _getAllUserHandler(Request request) async {
     jsonEncode(users),
     headers: {'Content-Type': 'application/json'},
   );
-}
-
-Future<Response> _createUserHandler(Request request) async {
-  try {
-    final data = await request.readAsString();
-    // stdout.writeln("Received Data: $data");
-
-    final json = jsonDecode(data);
-    // stdout.writeln("Decoded JSON: $json");
-
-    final file = File('data/person.json');
-    // stdout.writeln("File Path: ${file.path}");
-
-    List<dynamic> users = [];
-    if (await file.exists()) {
-      final contents = await file.readAsString();
-      // stdout.writeln("Existing File Contents: $contents");
-
-      if (contents.isNotEmpty) {
-        users = jsonDecode(contents);
-      }
-    }
-
-    users.add(json); // Add new user entry
-
-    await file.writeAsString(jsonEncode(users), mode: FileMode.write); // Save
-    stdout.writeln("User added successfully");
-
-    return Response.ok(jsonEncode(json)); // Return added user
-  } catch (e, stackTrace) {
-    stderr.writeln("Error in _createUserHandler: $e");
-    stderr.writeln(stackTrace);
-    return Response.internalServerError(body: 'Server error');
-  }
 }
 
 Response _rootHandler(Request req) {
