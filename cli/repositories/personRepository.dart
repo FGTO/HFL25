@@ -48,8 +48,6 @@ class PersonRepository extends DataRepository<Person> {
   // READ operation
   @override
   Future<List<Person>> getAll() async {
-    // final url = Uri.parse("https://localhost:$hostNumber/getusers");
-    // stdout.writeln("Run getALL");
     final url = Uri.parse("http://localhost:$hostNumber/getusers");
 
     // stdout.writeln("Before get request");

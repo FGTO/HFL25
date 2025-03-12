@@ -16,7 +16,8 @@ void main(List<String> args) async {
   print(" - PATCH /updateuser/<id>");
   print(" - DELETE /deleteuser/<id>");
 
-  print(" - GET /getvehicle");
+  print(" - GET /getvehicles");
+  print(" - PUT /addvehicle");
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addHandler(_router.call);
@@ -29,12 +30,12 @@ void main(List<String> args) async {
 final _router =
     Router()
       ..get('/', _rootHandler)
-      ..get('/getusers', _getAllUserHandler)
+      ..get('/getusers', _getAllUsersHandler)
       ..get('/getuser/<id>', _getUserByIdHandler)
       ..post('/adduser', _createUserHandler)
       ..patch('/updateuser/<id>', _updateUserHandler)
       ..delete('/deleteuser/<id>', _deleteUserHandler)
-      ..get('/getvehicle', _getVehicleHandler)
+      ..get('/getvehicles', _getVehiclesHandler)
       ..post('/addvehicle', _createVehicleHandler);
 
 Future<Response> _createVehicleHandler(Request request) async {
@@ -64,8 +65,25 @@ Future<Response> _createVehicleHandler(Request request) async {
   }
 }
 
-Future<Response> _getVehicleHandler(Request request) async {
-  return Response(200);
+Future<Response> _getVehiclesHandler(Request request) async {
+  final file = File('data/vehicle.json');
+
+  if (!await file.exists()) {
+    print('ERROR: vehicle.json file not found!');
+    return Response.notFound('Vehicle data file not found');
+  }
+
+  List<dynamic> vehicles = [];
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      vehicles = jsonDecode(contents);
+    }
+  }
+  return Response.ok(
+    jsonEncode(vehicles),
+    headers: {'Content-Type': 'application/json'},
+  );
 }
 
 Future<Response> _deleteUserHandler(Request request, String id) async {
@@ -186,13 +204,12 @@ Future<Response> _getUserByIdHandler(Request request, String id) async {
   );
 }
 
-Future<Response> _getAllUserHandler(Request request) async {
+Future<Response> _getAllUsersHandler(Request request) async {
   final file = File('data/person.json');
   List<dynamic> users = [];
   if (await file.exists()) {
     final contents = await file.readAsString();
     // stdout.writeln("Existing File Contents: $contents");
-
     if (contents.isNotEmpty) {
       users = jsonDecode(contents);
     }

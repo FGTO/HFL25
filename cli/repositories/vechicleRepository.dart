@@ -25,8 +25,7 @@ class VehicleRepository extends DataRepository<Vehicle> {
       stdout.writeln(jsonBody.toString());
       Response response = await http
           .post(url,
-              headers: {'Content-Type': 'application/json'}, 
-              body: jsonBody)
+              headers: {'Content-Type': 'application/json'}, body: jsonBody)
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) {
@@ -44,7 +43,20 @@ class VehicleRepository extends DataRepository<Vehicle> {
   }
 
 // READ
+@override
+  Future<List<Vehicle>> getAll() async {
+    final url = Uri.parse("http://localhost:$hostNumber/getvehicles");
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
 
+      return jsonData
+          .map((e) => Vehicle.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } else {
+      throw Exception("Failed to load vehicles: ${response.statusCode}");
+    }
+  }
 // TODO GET by id
 
 // TODO UPDATE
