@@ -43,7 +43,7 @@ Future<void> vehcicleMenu() async {
               vehicleId: vehicleId,
               ownerId: securityNum,
               licensePlate: licensePlate,
-              model: vehicleType.toString());
+              model: vehicleType.name);
 
           await vehicleRepo.create(newVehicle);
           break;

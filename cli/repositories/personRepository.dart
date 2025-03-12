@@ -27,20 +27,15 @@ class PersonRepository extends DataRepository<Person> {
 
       Response response = await http
           .post(url,
-              headers: {'Content-Type': 'application/json'}, body: jsonBody)
+              headers: {'Content-Type': 'application/json'}, 
+              body: jsonBody)
           .timeout(const Duration(seconds: 10));
-
-      /*  stdout.writeln("After HTTP request");
-    stdout.writeln("Response Status: ${response.statusCode}");
-    stdout.writeln("Response Body: ${response.body}"); */
 
       if (response.statusCode != 200) {
         throw Exception("Failed to add person: ${response.statusCode}");
       }
 
-      // stdout.writeln("Decoding JSON...");
       final json = jsonDecode(response.body);
-      // stdout.writeln("JSON Decoded Successfully!");
 
       return Person.fromJson(json);
     } catch (e, stackTrace) {

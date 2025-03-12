@@ -34,8 +34,36 @@ final _router =
       ..post('/adduser', _createUserHandler)
       ..patch('/updateuser/<id>', _updateUserHandler)
       ..delete('/deleteuser/<id>', _deleteUserHandler)
+      ..get('/getvehicle', _getVehicleHandler)
+      ..post('/addvehicle', _createVehicleHandler);
 
-      ..get('/getvehicle', _getVehicleHandler);
+Future<Response> _createVehicleHandler(Request request) async {
+  try {
+    final data = await request.readAsString();
+    final json = jsonDecode(data);
+    final file = File('data/vehicle.json');
+
+    List<dynamic> vehicles = [];
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+
+      if (contents.isNotEmpty) {
+        vehicles = jsonDecode(contents);
+      }
+    }
+    vehicles.add(json);
+
+    await file.writeAsString(jsonEncode(vehicles), mode: FileMode.write);
+    stdout.writeln("Vehicle added successfully");
+
+    return Response.ok(jsonEncode(json)); // Return added user
+  } catch (e, stackTrace) {
+    stderr.writeln("Error in _createVehicleHandler: $e");
+    stderr.writeln(stackTrace);
+    return Response.internalServerError(body: 'Server error');
+  }
+}
+
 Future<Response> _getVehicleHandler(Request request) async {
   return Response(200);
 }

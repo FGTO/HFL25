@@ -15,34 +15,35 @@ class VehicleRepository extends DataRepository<Vehicle> {
   @override
   Map<String, dynamic> toJson(Vehicle item) => item.toJson();
 
-// TODO CREATE
-Future<Vehicle> create(Vehicle vehicle) async {
-  try{
-    final url = Uri.parse("http://localhost:$hostNumber/addvehicle");
+// CREATE
+  @override
+  Future<Vehicle> create(Vehicle vehicle) async {
+    try {
+      final url = Uri.parse("http://localhost:8081/addvehicle");
 
-    String jsonBody = jsonEncode(vehicle.toJson());
+      String jsonBody = jsonEncode(vehicle.toJson());
+      stdout.writeln(jsonBody.toString());
+      Response response = await http
+          .post(url,
+              headers: {'Content-Type': 'application/json'}, 
+              body: jsonBody)
+          .timeout(const Duration(seconds: 10));
 
-    Response response = await http
-      .post(url,
-        headers: {'Content-Type' : 'application/json'}, 
-        body: jsonBody)
-      .timeout(const Duration(seconds: 10));
-
-      if(response.statusCode != 200){
+      if (response.statusCode != 200) {
         throw Exception('Failed to add vehicle: ${response.statusCode}');
       }
 
       final json = jsonDecode((response.body));
 
       return Vehicle.fromJson(json);
-  } catch (e, stackTrace){
-    stderr.write("Error in create method: $e");
-    stderr.writeln(stackTrace);
-    rethrow;
-  }
+    } catch (e, stackTrace) {
+      stderr.write("Error in create method: $e");
+      stderr.writeln(stackTrace);
+      rethrow;
+    }
   }
 
-// TODO READ
+// READ
 
 // TODO GET by id
 

@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "vehicleId": "2016c13c-caf3-4403-b28c-a97657b9bead",
+    "ownerId": "2233448899",
+    "licensePlate": "abc123",
+    "model": "vehicletype.motorcycle",
+    "parkingSpaceId": null
+  },
+  {
+    "vehicleId": "bb0e256b-e108-42e2-ba4e-9149eb0bac06",
+    "ownerId": "2233448899",
+    "licensePlate": "abc123",
+    "model": "vehicletype.motorcycle",
+    "parkingSpaceId": null
+  }
+]
