@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:shared/shared.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -38,7 +39,58 @@ final _router =
       ..get('/getvehicles', _getVehiclesHandler)
       ..get('/getvehicle/<id>', _getVehicleByIdHandler)
       ..post('/addvehicle', _createVehicleHandler)
-      ..patch('/updatevehicle/<id>', _updateVehicleHandler);
+      ..patch('/updatevehicle/<id>', _updateVehicleHandler)
+      ..delete('/deletevehicle/<id>', _deleteVehicleHandler);
+
+Future<Response> _deleteVehicleHandler(Request request, String id) async {
+  final file = File('data/vehicle.json');
+  List<dynamic> vehicles = [];
+
+  if(await file.exists()){
+    final contents = await file.readAsString();
+    if(contents.isNotEmpty){
+      vehicles = jsonDecode(contents);
+    }
+  }
+
+  final vehicleIndex = vehicles.indexWhere(
+    (vehicle) => vehicle['licensePlate'].toString() == id,
+  );
+
+  if(vehicleIndex == -1){
+    return Response.notFound(jsonEncode({'message':'Vehicle not found'}));
+  }
+  vehicles.remove(vehicleIndex);
+  await file.writeAsString(jsonEncode(vehicles));
+
+  return Response.ok(jsonEncode({'message':'Vehicle deleted successfully'}));
+}
+
+Future<Response> _deleteUserHandler(Request request, String id) async {
+  final file = File('data/person.json');
+  List<dynamic> users = [];
+
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      users = jsonDecode(contents);
+    }
+  }
+
+  final userIndex = users.indexWhere(
+    (user) => user["personId"].toString() == id,
+  );
+
+  if (userIndex == -1) {
+    return Response.notFound(jsonEncode({'message': 'User not found'}));
+  }
+
+  //Remove the user from the list
+  users.removeAt(userIndex);
+  await file.writeAsString(jsonEncode(users));
+
+  return Response.ok(jsonEncode({'message': 'User deleted successfully'}));
+}
 
 Future<Response> _updateVehicleHandler(Request request, String id) async {
   final file = File('data/vehicle.json');
@@ -251,31 +303,7 @@ Future<Response> _getUsersHandler(Request request) async {
   );
 }
 
-Future<Response> _deleteUserHandler(Request request, String id) async {
-  final file = File('data/person.json');
-  List<dynamic> users = [];
 
-  if (await file.exists()) {
-    final contents = await file.readAsString();
-    if (contents.isNotEmpty) {
-      users = jsonDecode(contents);
-    }
-  }
-
-  final userIndex = users.indexWhere(
-    (user) => user["personId"].toString() == id,
-  );
-
-  if (userIndex == -1) {
-    return Response.notFound(jsonEncode({'message': 'User not found'}));
-  }
-
-  //Remove the user from the list
-  users.removeAt(userIndex);
-  await file.writeAsString(jsonEncode(users));
-
-  return Response.ok(jsonEncode({'message': 'User deleted successfully'}));
-}
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
