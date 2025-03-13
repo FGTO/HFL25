@@ -27,8 +27,7 @@ class PersonRepository extends DataRepository<Person> {
 
       Response response = await http
           .post(url,
-              headers: {'Content-Type': 'application/json'}, 
-              body: jsonBody)
+              headers: {'Content-Type': 'application/json'}, body: jsonBody)
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) {

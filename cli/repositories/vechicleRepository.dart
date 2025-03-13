@@ -43,7 +43,7 @@ class VehicleRepository extends DataRepository<Vehicle> {
   }
 
 // READ
-@override
+  @override
   Future<List<Vehicle>> getAll() async {
     final url = Uri.parse("http://localhost:$hostNumber/getvehicles");
     final response = await http.get(url);
@@ -57,13 +57,45 @@ class VehicleRepository extends DataRepository<Vehicle> {
       throw Exception("Failed to load vehicles: ${response.statusCode}");
     }
   }
-// TODO GET by id
 
-// TODO UPDATE
+// GET vehicle by id
+  Future<Vehicle?> getVehicleById(String id) async {
+    final url = Uri.parse("http://localhost:$hostNumber/getvehicle/$id");
+    final response = await http.get(url);
 
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = jsonDecode(response.body);
+      return Vehicle.fromJson(jsonData);
+    } else if (response.statusCode == 404) {
+      return null;
+    } else {
+      throw Exception(("Failed to load vehicle: ${response.statusCode}"));
+    }
+  }
+
+// UPDATE
+  Future<void> updateVehicle(String regNum, Vehicle updateObject) async {
+    final url = Uri.parse("http://localhost:$hostNumber/updatevehicle/$regNum");
+    try {
+      final response = await http.patch(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(updateObject),
+      );
+
+      if (response.statusCode == 200) {
+        print(
+            "✅ Vehicle with registration number $regNum updated successfully.");
+      } else {
+        print("❌ Failed to update vehicle: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error during vehicle update request");
+    }
+  }
 // TODO DELETE
 
-  Future<Vehicle?> getVehicleById(String id) async {
+  /*Future<Vehicle?> getVehicleById(String id) async {
     final vehicles = await getAll();
 
     print("Searching for: '$id'");
@@ -80,7 +112,7 @@ class VehicleRepository extends DataRepository<Vehicle> {
     // print("Person with ID '$id' not found.");
     return null; // Explicitly return null.
   }
-
+*/
   @override
   String getId(Vehicle vehicle) {
     return vehicle.licensePlate; // Ensure `Person` has an `id` property

@@ -30,86 +30,43 @@ void main(List<String> args) async {
 final _router =
     Router()
       ..get('/', _rootHandler)
-      ..get('/getusers', _getAllUsersHandler)
+      ..get('/getusers', _getUsersHandler)
       ..get('/getuser/<id>', _getUserByIdHandler)
       ..post('/adduser', _createUserHandler)
       ..patch('/updateuser/<id>', _updateUserHandler)
       ..delete('/deleteuser/<id>', _deleteUserHandler)
       ..get('/getvehicles', _getVehiclesHandler)
-      ..post('/addvehicle', _createVehicleHandler);
+      ..get('/getvehicle/<id>', _getVehicleByIdHandler)
+      ..post('/addvehicle', _createVehicleHandler)
+      ..patch('/updatevehicle/<id>', _updateVehicleHandler);
 
-Future<Response> _createVehicleHandler(Request request) async {
-  try {
-    final data = await request.readAsString();
-    final json = jsonDecode(data);
-    final file = File('data/vehicle.json');
-
-    List<dynamic> vehicles = [];
-    if (await file.exists()) {
-      final contents = await file.readAsString();
-
-      if (contents.isNotEmpty) {
-        vehicles = jsonDecode(contents);
-      }
-    }
-    vehicles.add(json);
-
-    await file.writeAsString(jsonEncode(vehicles), mode: FileMode.write);
-    stdout.writeln("Vehicle added successfully");
-
-    return Response.ok(jsonEncode(json)); // Return added user
-  } catch (e, stackTrace) {
-    stderr.writeln("Error in _createVehicleHandler: $e");
-    stderr.writeln(stackTrace);
-    return Response.internalServerError(body: 'Server error');
-  }
-}
-
-Future<Response> _getVehiclesHandler(Request request) async {
+Future<Response> _updateVehicleHandler(Request request, String id) async {
   final file = File('data/vehicle.json');
-
-  if (!await file.exists()) {
-    print('ERROR: vehicle.json file not found!');
-    return Response.notFound('Vehicle data file not found');
-  }
-
   List<dynamic> vehicles = [];
-  if (await file.exists()) {
+  if(await file.exists()){
     final contents = await file.readAsString();
-    if (contents.isNotEmpty) {
+    if(contents.isNotEmpty){
       vehicles = jsonDecode(contents);
     }
   }
-  return Response.ok(
-    jsonEncode(vehicles),
-    headers: {'Content-Type': 'application/json'},
-  );
-}
 
-Future<Response> _deleteUserHandler(Request request, String id) async {
-  final file = File('data/person.json');
-  List<dynamic> users = [];
-
-  if (await file.exists()) {
-    final contents = await file.readAsString();
-    if (contents.isNotEmpty) {
-      users = jsonDecode(contents);
-    }
-  }
-
-  final userIndex = users.indexWhere(
-    (user) => user["personId"].toString() == id,
+  final vehicleIndex = vehicles.indexWhere(
+    (vehicle)=> vehicle['licensePlate'].toString() == id,
   );
 
-  if (userIndex == -1) {
-    return Response.notFound(jsonEncode({'message': 'User not found'}));
+  if(vehicleIndex == -1){
+    return Response.notFound(jsonEncode({'message':'Vehicle not founded'}));
   }
 
-  //Remove the user from the list
-  users.removeAt(userIndex);
-  await file.writeAsString(jsonEncode(users));
+final Map<String, dynamic> payload = jsonDecode(await request.readAsString());
 
-  return Response.ok(jsonEncode({'message': 'User deleted successfully'}));
+  final Map<String, dynamic> existingVehicle =
+    vehicles[vehicleIndex] as Map<String,dynamic>;
+
+    vehicles[vehicleIndex] = {...existingVehicle, ...payload};
+    await file.writeAsString(jsonEncode(vehicles));
+
+    return Response.ok(jsonEncode(vehicles[vehicleIndex]));
 }
 
 Future<Response> _updateUserHandler(Request request, String id) async {
@@ -143,6 +100,83 @@ Future<Response> _updateUserHandler(Request request, String id) async {
   await file.writeAsString(jsonEncode(users));
 
   return Response.ok(jsonEncode(users[userIndex]));
+}
+
+Future<Response> _getVehicleByIdHandler(Request request, String id) async {
+  final file = File('data/vehicle.json');
+  List<dynamic> vehicles = [];
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      vehicles = jsonDecode(contents);
+    }
+  }
+
+  final vehicle = vehicles.firstWhere(
+    (vehicle) => vehicle['licensePlate'].toString() == id,
+    orElse: () => null,
+  );
+  stdout.writeln('Vehicle $vehicle');
+  if (vehicle == null) {
+    return Response.notFound(jsonEncode({'Error': 'Vehcicle not found'}));
+  }
+
+  return Response.ok(
+    jsonEncode(vehicle),
+    headers: {'Content-Type':'application/json'},
+  );
+}
+
+Future<Response> _getUserByIdHandler(Request request, String id) async {
+  final file = File('data/person.json');
+  List<dynamic> users = [];
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      users = jsonDecode(contents);
+    }
+  }
+  //Searching for personId that match the id arg.
+  final user = users.firstWhere(
+    (user) => user['personId'].toString() == id,
+    orElse: () => null,
+  );
+  stdout.writeln('User $user');
+  if (user == null) {
+    return Response.notFound(jsonEncode({'error': 'User not found'}));
+  }
+
+  return Response.ok(
+    jsonEncode(user),
+    headers: {'Content-Type': 'application/json'},
+  );
+}
+
+Future<Response> _createVehicleHandler(Request request) async {
+  try {
+    final data = await request.readAsString();
+    final json = jsonDecode(data);
+    final file = File('data/vehicle.json');
+
+    List<dynamic> vehicles = [];
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+
+      if (contents.isNotEmpty) {
+        vehicles = jsonDecode(contents);
+      }
+    }
+    vehicles.add(json);
+
+    await file.writeAsString(jsonEncode(vehicles), mode: FileMode.write);
+    stdout.writeln("Vehicle added successfully");
+
+    return Response.ok(jsonEncode(json)); // Return added user
+  } catch (e, stackTrace) {
+    stderr.writeln("Error in _createVehicleHandler: $e");
+    stderr.writeln(stackTrace);
+    return Response.internalServerError(body: 'Server error');
+  }
 }
 
 Future<Response> _createUserHandler(Request request) async {
@@ -179,32 +213,28 @@ Future<Response> _createUserHandler(Request request) async {
   }
 }
 
-Future<Response> _getUserByIdHandler(Request request, String id) async {
-  final file = File('data/person.json');
-  List<dynamic> users = [];
+Future<Response> _getVehiclesHandler(Request request) async {
+  final file = File('data/vehicle.json');
+
+  if (!await file.exists()) {
+    print('ERROR: vehicle.json file not found!');
+    return Response.notFound('Vehicle data file not found');
+  }
+
+  List<dynamic> vehicles = [];
   if (await file.exists()) {
     final contents = await file.readAsString();
     if (contents.isNotEmpty) {
-      users = jsonDecode(contents);
+      vehicles = jsonDecode(contents);
     }
   }
-  //Searching for personId that match the id arg.
-  final user = users.firstWhere(
-    (user) => user['personId'].toString() == id,
-    orElse: () => null,
-  );
-  stdout.writeln('User $user');
-  if (user == null) {
-    return Response.notFound(jsonEncode({'error': 'User not found'}));
-  }
-
   return Response.ok(
-    jsonEncode(user),
+    jsonEncode(vehicles),
     headers: {'Content-Type': 'application/json'},
   );
 }
 
-Future<Response> _getAllUsersHandler(Request request) async {
+Future<Response> _getUsersHandler(Request request) async {
   final file = File('data/person.json');
   List<dynamic> users = [];
   if (await file.exists()) {
@@ -219,6 +249,32 @@ Future<Response> _getAllUsersHandler(Request request) async {
     jsonEncode(users),
     headers: {'Content-Type': 'application/json'},
   );
+}
+
+Future<Response> _deleteUserHandler(Request request, String id) async {
+  final file = File('data/person.json');
+  List<dynamic> users = [];
+
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      users = jsonDecode(contents);
+    }
+  }
+
+  final userIndex = users.indexWhere(
+    (user) => user["personId"].toString() == id,
+  );
+
+  if (userIndex == -1) {
+    return Response.notFound(jsonEncode({'message': 'User not found'}));
+  }
+
+  //Remove the user from the list
+  users.removeAt(userIndex);
+  await file.writeAsString(jsonEncode(users));
+
+  return Response.ok(jsonEncode({'message': 'User deleted successfully'}));
 }
 
 Response _rootHandler(Request req) {
