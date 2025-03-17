@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:shared/shared.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -60,7 +59,7 @@ Future<Response> _deleteVehicleHandler(Request request, String id) async {
   if(vehicleIndex == -1){
     return Response.notFound(jsonEncode({'message':'Vehicle not found'}));
   }
-  vehicles.remove(vehicleIndex);
+  vehicles.removeAt(vehicleIndex);
   await file.writeAsString(jsonEncode(vehicles));
 
   return Response.ok(jsonEncode({'message':'Vehicle deleted successfully'}));

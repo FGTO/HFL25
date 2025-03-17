@@ -81,7 +81,7 @@ Future<void> vehcicleMenu() async {
                 licensePlate: newPlate,
                 model: vehicle.model,
                 parkingSpaceId: vehicle.parkingSpaceId);
-            vehicleRepo.update(licensePlate, updatedVehicle);
+             await vehicleRepo.updateVehicle(licensePlate, updatedVehicle);
           } else {
             print('License plate not found.');
           }
@@ -97,7 +97,7 @@ Future<void> vehcicleMenu() async {
             stdout.write('Deleting ? (y/n)');
             String deleting = getUserStringInput();
             if (deleting.toLowerCase() == 'y') {
-              vehicleRepo.delete(plate);
+              await vehicleRepo.deleteVehicle(plate);
             } else {
               print(
                   "Can't find vehicle with this vehicle with this ${vehicle.licensePlate} licesen plate.");
@@ -105,6 +105,7 @@ Future<void> vehcicleMenu() async {
             }
             break;
           }
+          break;
         case 6:
           return;
         default:

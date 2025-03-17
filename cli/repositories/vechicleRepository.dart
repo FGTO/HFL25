@@ -93,16 +93,18 @@ class VehicleRepository extends DataRepository<Vehicle> {
       print("Error during vehicle update request");
     }
   }
+
 // DELETE
-Future<void> deleteVehicle(String id) async {
-  final url = Uri.parse("http://localhost:$hostNumber/deletevehicle/$id");
-  try{
-    final response = await http.delete(
-      url,
-      headers: {'Content-Type':'application/json',
-      },
-    );
-    if (response.statusCode == 200) {
+  Future<void> deleteVehicle(String id) async {
+    final url = Uri.parse("http://localhost:$hostNumber/deletevehicle/$id");
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
         print("✅ Vehicle with registration number $id deleted successfully.");
       } else {
         final errorMessage =
@@ -113,7 +115,7 @@ Future<void> deleteVehicle(String id) async {
     } catch (e) {
       print("❌ Exception occurered while deleting vehicle: $e");
     }
-}
+  }
 
   /*Future<Vehicle?> getVehicleById(String id) async {
     final vehicles = await getAll();
