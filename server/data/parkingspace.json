@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "parkingSpaceId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "number": "A101",
+    "isOccupied": true,
+    "vehicleId": "550e8400-e29b-41d4-a716-446655440001",
+    "parkingId": "550e8400-e29b-41d4-a716-446655440000",
+    "type": "Compact",
+    "isEVChargingAvailable": true,
+    "isHandicapAccessible": false
+  },
+  {
+    "parkingSpaceId": "3f2504e0-4f89-11d3-9a0c-0305e82c3302",
+    "number": "A102",
+    "isOccupied": false,
+    "vehicleId": null,
+    "parkingId": "550e8400-e29b-41d4-a716-446655440000",
+    "type": "Standard",
+    "isEVChargingAvailable": false,
+    "isHandicapAccessible": true
+  },
+  {
+    "parkingSpaceId": "6fa459ea-ee8a-3ca4-894e-db77e1603551",
+    "number": "B201",
+    "isOccupied": true,
+    "vehicleId": "6fa459ea-ee8a-3ca4-894e-db77e1603559",
+    "parkingId": "6fa459ea-ee8a-3ca4-894e-db77e160355e",
+    "type": "Large Vehicle",
+    "isEVChargingAvailable": false,
+    "isHandicapAccessible": false
+  },
+  {
+    "parkingSpaceId": "7d44b527-66aa-4d7e-b5b7-1d87110ed311",
+    "number": "C301",
+    "isOccupied": false,
+    "vehicleId": null,
+    "parkingId": "7d44b527-66aa-4d7e-b5b7-1d87110ed3a3",
+    "type": "Motorcycle",
+    "isEVChargingAvailable": false,
+    "isHandicapAccessible": false
+  },
+  {
+    "parkingSpaceId": "7d44b527-66aa-4d7e-b5b7-1d87110ed312",
+    "number": "C302",
+    "isOccupied": true,
+    "vehicleId": "7d44b527-66aa-4d7e-b5b7-1d87110ed320",
+    "parkingId": "7d44b527-66aa-4d7e-b5b7-1d87110ed3a3",
+    "type": "Standard",
+    "isEVChargingAvailable": true,
+    "isHandicapAccessible": true
+  }
+]

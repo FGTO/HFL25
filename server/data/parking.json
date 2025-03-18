@@ -1,1 +1,61 @@
-[]
+[
+    {
+      "parkingId": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "Disney World Parking",
+      "location": "World Drive, Florida",
+      "capacity": 500,
+      "availableSpaces": 120,
+      "parkingSpaceIds": [
+        "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+        "3f2504e0-4f89-11d3-9a0c-0305e82c3302",
+        "3f2504e0-4f89-11d3-9a0c-0305e82c3303",
+        "3f2504e0-4f89-11d3-9a0c-0305e82c3304"
+      ],
+      "pricingPerHour": 5.0,
+      "openHours": "06:00-23:00",
+      "securityFeatures": ["CCTV", "Security Guard", "Barrier Gate"],
+      "isCovered": true,
+      "hasEVCharging": true,
+      "contactNumber": "+1-555-1234"
+    },
+    {
+      "parkingId": "6fa459ea-ee8a-3ca4-894e-db77e160355e",
+      "name": "Central Park Parking",
+      "location": "North 110th Street, New York",
+      "capacity": 300,
+      "availableSpaces": 45,
+      "parkingSpaceIds": [
+        "6fa459ea-ee8a-3ca4-894e-db77e1603551",
+        "6fa459ea-ee8a-3ca4-894e-db77e1603552",
+        "6fa459ea-ee8a-3ca4-894e-db77e1603553",
+        "6fa459ea-ee8a-3ca4-894e-db77e1603554"
+      ],
+      "pricingPerHour": 8.0,
+      "openHours": "24/7",
+      "securityFeatures": ["CCTV", "Automated Entry"],
+      "isCovered": false,
+      "hasEVCharging": false,
+      "contactNumber": "+1-555-5678"
+    },
+    {
+      "parkingId": "7d44b527-66aa-4d7e-b5b7-1d87110ed3a3",
+      "name": "Wayne Parking House",
+      "location": "224 Park Drive, Gotham City",
+      "capacity": 1000,
+      "availableSpaces": 300,
+      "parkingSpaceIds": [
+        "7d44b527-66aa-4d7e-b5b7-1d87110ed311",
+        "7d44b527-66aa-4d7e-b5b7-1d87110ed312",
+        "7d44b527-66aa-4d7e-b5b7-1d87110ed313",
+        "7d44b527-66aa-4d7e-b5b7-1d87110ed314",
+        "7d44b527-66aa-4d7e-b5b7-1d87110ed315"
+      ],
+      "pricingPerHour": 12.0,
+      "openHours": "05:00-02:00",
+      "securityFeatures": ["CCTV", "Security Guard", "Fingerprint Access"],
+      "isCovered": true,
+      "hasEVCharging": true,
+      "contactNumber": "+1-555-9999"
+    }
+  ]
+  
