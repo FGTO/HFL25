@@ -9,21 +9,39 @@ void main(List<String> args) async {
   final ip = InternetAddress.anyIPv4;
   final port = int.parse(Platform.environment['PORT'] ?? '8081');
 
-  print("✅ Registered routes:");
+  print("✅ Registered routes for 'users' CRUD operations:");
   print(" - GET /getusers");
   print(" - GET /getuser/<id>");
   print(" - POST /adduser");
   print(" - PATCH /updateuser/<id>");
   print(" - DELETE /deleteuser/<id>");
 
+  print("✅ Registered routes for 'vehicles' CRUD operations:");
   print(" - GET /getvehicles");
-  print(" - PUT /addvehicle");
+  print(" - GET /getvehicle/<id>");
+  print(" - POST /addvehicle");
+  print(" - PATCH /updatevehicle/<id>");
+  print(" - DELETE /deletevehicle/<id>");
+
+  print("✅ Registered routes for 'parking' CRUD operations:");
+  print(" - GET /getparkings");
+  print(" - GET /getparking/<id>");
+  print(" - POST /addparking");
+  print(" - PATCH /updateparking/<id>");
+  print(" - DELETE /deleteparking/<id>");
+
+  print("✅ Registered routes for 'parking space' CRUD operations:");
+  print(" - GET /getparkingspaces");
+  print(" - GET /getparkingspace/<id>");
+  print(" - POST /addparkingspace");
+  print(" - PATCH /updateparkingspace/<id>");
+  print(" - DELETE /deleteparkingspace/<id>");
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addHandler(_router.call);
   final server = await serve(handler, ip, port);
 
-  print('🚀 Server listening on port ${server.port}');
+  print('📡 Server listening on port ${server.port}');
 }
 
 // Configure routes.
@@ -49,26 +67,25 @@ final _router =
       ..patch('/updateparking/<id>', _updateParkingHandler)
       ..delete('/deleteparking/<id>', _deleteParkingHandler);
 
-
 Future<Response> _deleteParkingHandler(Request request, String id) async {
   final file = File('data/parking.json');
-List<dynamic> parkings =[];
-if(await file.exists()){
-  final contents = await file.readAsString();
-  if(contents.isNotEmpty){
-    parkings = jsonDecode(contents);
+  List<dynamic> parkings = [];
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      parkings = jsonDecode(contents);
+    }
   }
-}
-final parkingIndex = parkings.firstWhere(
-  (parking)=> parking['parkingId'].toString() == id,
+  final parkingIndex = parkings.firstWhere(
+    (parking) => parking['parkingId'].toString() == id,
   );
-  if(parkingIndex == -1){
-    return Response.notFound(jsonEncode({'message':'Parking not found'}));
+  if (parkingIndex == -1) {
+    return Response.notFound(jsonEncode({'message': 'Parking not found'}));
   }
   parkings.removeAt(parkingIndex);
   await file.writeAsString((jsonEncode(parkings)));
 
-  return Response.ok(jsonEncode({'message':'Parking deleted success'}));
+  return Response.ok(jsonEncode({'message': 'Parking deleted success'}));
 }
 
 Future<Response> _deleteVehicleHandler(Request request, String id) async {
@@ -166,8 +183,8 @@ Future<Response> _updateVehicleHandler(Request request, String id) async {
   }
 
   final Map<String, dynamic> payload = jsonDecode(await request.readAsString());
-  final Map<String, dynamic> existingVehicle = 
-  vehicles[vehicleIndex] as Map<String, dynamic>;
+  final Map<String, dynamic> existingVehicle =
+      vehicles[vehicleIndex] as Map<String, dynamic>;
 
   vehicles[vehicleIndex] = {...existingVehicle, ...payload};
   await file.writeAsString(jsonEncode(vehicles));

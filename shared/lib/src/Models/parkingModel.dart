@@ -1,4 +1,3 @@
-// ignore: file_names
 class Parking {
   final String parkingId;
   final String name;
