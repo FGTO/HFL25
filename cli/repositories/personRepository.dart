@@ -67,7 +67,7 @@ class PersonRepository extends DataRepository<Person> {
   }
 
 // Get user by id
-  Future<Person?> getById(String id) async {
+  Future<Person?> getUserById(String id) async {
     final url = Uri.parse("http://localhost:$hostNumber/getuser/$id");
     final response = await http.get(url);
 

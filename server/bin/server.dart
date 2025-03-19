@@ -61,7 +61,7 @@ final _router =
       ..patch('/updatevehicle/<id>', _updateVehicleHandler)
       ..delete('/deletevehicle/<id>', _deleteVehicleHandler)
       // Parking handler
-      ..get('/getparkings', _getParkingHandler)
+      ..get('/getparkings', _getParkingsHandler)
       ..get('/getparking/<id>', _getParkingByIdHandler)
       ..post('/addparking', _addParkingHandler)
       ..patch('/updateparking/<id>', _updateParkingHandler)
@@ -70,22 +70,26 @@ final _router =
 Future<Response> _deleteParkingHandler(Request request, String id) async {
   final file = File('data/parking.json');
   List<dynamic> parkings = [];
+  
   if (await file.exists()) {
     final contents = await file.readAsString();
     if (contents.isNotEmpty) {
       parkings = jsonDecode(contents);
     }
   }
-  final parkingIndex = parkings.firstWhere(
+
+  final parkingIndex = parkings.indexWhere(
     (parking) => parking['parkingId'].toString() == id,
   );
+
   if (parkingIndex == -1) {
     return Response.notFound(jsonEncode({'message': 'Parking not found'}));
   }
-  parkings.removeAt(parkingIndex);
-  await file.writeAsString((jsonEncode(parkings)));
 
-  return Response.ok(jsonEncode({'message': 'Parking deleted success'}));
+  parkings.removeAt(parkingIndex);
+  await file.writeAsString(jsonEncode(parkings));
+
+  return Response.ok(jsonEncode({'message': 'Parking deleted successfully'}));
 }
 
 Future<Response> _deleteVehicleHandler(Request request, String id) async {
@@ -141,25 +145,30 @@ Future<Response> _deleteUserHandler(Request request, String id) async {
 Future<Response> _updateParkingHandler(Request request, String id) async {
   final file = File('data/parking.json');
   List<dynamic> parkings = [];
+  
   if (await file.exists()) {
     final contents = await file.readAsString();
     if (contents.isNotEmpty) {
       parkings = jsonDecode(contents);
     }
   }
-  final parkingIndex = parkings.firstWhere(
-    (parkings) => parkings['parkingId'].toString() == id,
+  
+  final parkingIndex = parkings.indexWhere(
+    (parking) => parking['parkingId'].toString() == id,
   );
 
   if (parkingIndex == -1) {
     return Response.notFound(jsonEncode({'message': 'Parking not found'}));
   }
+
   final Map<String, dynamic> payload = jsonDecode(await request.readAsString());
+
   final Map<String, dynamic> existingParking =
       parkings[parkingIndex] as Map<String, dynamic>;
 
   parkings[parkingIndex] = {...existingParking, ...payload};
-  await file.writeAsString((jsonEncode(parkings)));
+
+  await file.writeAsString(jsonEncode(parkings));
 
   return Response.ok(jsonEncode(parkings[parkingIndex]));
 }
@@ -388,10 +397,11 @@ Future<Response> _addUserHandler(Request request) async {
   }
 }
 
-Future<Response> _getParkingHandler(Request request) async {
-  final file = File('data/parking');
+Future<Response> _getParkingsHandler(Request request) async {
+  final file = File('data/parking.json');
+
   if (!await file.exists()) {
-    print('ERROR: parking.json file not found');
+    print('ERROR: parking.json file not found!');
     return Response.notFound('Parking data file not found');
   }
 
@@ -431,6 +441,12 @@ Future<Response> _getVehiclesHandler(Request request) async {
 
 Future<Response> _getUsersHandler(Request request) async {
   final file = File('data/person.json');
+
+  if (!await file.exists()) {
+    print('ERROR: person.json file not found!');
+    return Response.notFound('Vehicle data file not found');
+  }
+
   List<dynamic> users = [];
   if (await file.exists()) {
     final contents = await file.readAsString();

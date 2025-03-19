@@ -100,7 +100,7 @@ Future<void> userMenu() async {
           String securityNum = getUserStringInput();
           securityNum = securityNum.replaceAll('-', '').trim();
 
-          final person = await personRepo.getById(securityNum);
+          final person = await personRepo.getUserById(securityNum);
           if (person != null) {
             print(
                 'Found: ${person.firstName} ${person.surname} - ${person.email}');
@@ -113,7 +113,7 @@ Future<void> userMenu() async {
           stdout.write("Enter user's social security number: ");
           String securityNum = getUserStringInput();
           securityNum = securityNum.replaceAll('-', '').trim();
-          final person = await personRepo.getById(securityNum);
+          final person = await personRepo.getUserById(securityNum);
           if (person != null) {
             print("Edit: ${person.firstName} ${person.surname}");
             await editPersonMenu(person, personRepo);
@@ -125,7 +125,7 @@ Future<void> userMenu() async {
           stdout.writeln("Delete user");
           stdout.writeln("Enter user's social security number to delete: ");
           String sec = (getUserStringInput()).trim();
-          final person = await personRepo.getById(sec);
+          final person = await personRepo.getUserById(sec);
           if (person != null) {
             stdout.write("Are you sure you want to delete: ");
             stdout.write(

@@ -17,10 +17,10 @@ Future<void> parkingMenu() async {
     stdout.writeln("6. Return to main menu");
     stdout.writeln("Choose one option (1-6): ");
 
-    var uuid = Uuid();
     String menuChoice = getUserStringInput();
     int? menuNum = int.tryParse(menuChoice);
     if (menuNum != null && menuNum >= 1 && menuNum <= 6) {
+      var uuid = Uuid();
       var parkingRepo = ParkingRepository();
       switch (menuNum) {
         case 1:
@@ -45,14 +45,16 @@ Future<void> parkingMenu() async {
               name: name,
               location: location,
               parkingSpaceIds: parkingSpaceIds);
-          parkingRepo.create(newParking);
+          await parkingRepo.create(newParking);
           break;
         case 2:
           stdout.writeln("List of parkings");
           stdout.writeln("__________________________");
           final parkings = await parkingRepo.getAll();
           for (var parking in parkings) {
-            print("${parking.location} with ${parking.parkingSpaceIds}");
+            stdout
+                .writeln("ParkingID: ${parking.parkingId} \nParking location: ${parking.location}\nParking spaces: ${parking.parkingSpaceIds}");
+                stdout.writeln();
           }
           break;
         case 3:
@@ -86,8 +88,7 @@ Future<void> parkingMenu() async {
                 name: newParkingName,
                 location: newParkingLocation,
                 parkingSpaceIds: parking.parkingSpaceIds);
-
-            parkingRepo.update(parkingId, updatedParking);
+            await parkingRepo.update(parkingId, updatedParking);
           } else {
             print('Security number not found.');
           }
@@ -97,14 +98,13 @@ Future<void> parkingMenu() async {
           stdout.writeln("Enter parking id: ");
           String parkingId = (getUserStringInput()).trim();
           final parking = await parkingRepo.getParkingById(parkingId);
-
           if (parking != null) {
             stdout.write("Are you sure you want to delete: ");
             stdout.write(
                 'Deleting : ${parking.parkingId} - ${parking.name} ? (y/n)');
             String deleting = getUserStringInput();
             if (deleting.toLowerCase() == 'y') {
-              parkingRepo.delete(parkingId);
+              await parkingRepo.delete(parkingId);
             } else {
               print("Can't find any parking space with id: $parkingId.");
               break;
@@ -114,8 +114,10 @@ Future<void> parkingMenu() async {
         case 6:
           return;
         default:
-          break;
+          stdout.writeln("Something went wrong. Try again.");
       }
+    } else {
+      print("Incorrect input. Try again.");
     }
   }
 }

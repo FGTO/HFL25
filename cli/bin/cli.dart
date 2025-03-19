@@ -26,10 +26,10 @@ import '../utils/helperFunctions.dart';
           await vehcicleMenu();
           break;
         case 3:
-          parkingspaceMenu();
+          await parkingspaceMenu();
           break;
         case 4:
-          parkingMenu();
+          await parkingMenu();
           break;
         case 5:
           return;
