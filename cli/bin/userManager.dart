@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:shared/shared.dart';
 
 import '../utils/helperFunctions.dart';
-import '../repositories/personRepository.dart';
+import '../repositories/userRepository.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> userMenu() async {

@@ -4,7 +4,7 @@ import 'package:shared/shared.dart';
 import '../utils/helperFunctions.dart';
 import '../Repositories/parkingspaceRepository.dart';
 import 'package:uuid/uuid.dart';
- 
+
 Future<void> parkingspaceMenu() async {
   while (true) {
     stdout.writeln();
@@ -17,10 +17,10 @@ Future<void> parkingspaceMenu() async {
     stdout.writeln("6. Return to main menu");
     stdout.writeln("Choose one option (1-6): ");
 
-    var uuid = Uuid();
     String menuChoice = getUserStringInput();
     int? menuNum = int.tryParse(menuChoice);
     if (menuNum != null && menuNum >= 1 && menuNum <= 6) {
+      var uuid = Uuid();
       var parkingspaceRepo = ParkingspaceRepository();
       switch (menuNum) {
         case 1:
@@ -31,14 +31,14 @@ Future<void> parkingspaceMenu() async {
           String parkingId = getUserStringInput();
 
           stdout.write("Enter number for the parking space");
-          String number =getUserStringInput();
+          String number = getUserStringInput();
 
           Parkingspace newSpace = Parkingspace(
               parkingSpaceId: parkingSpaceId,
               number: number,
               isOccupied: false,
               parkingId: parkingId);
-          parkingspaceRepo.create(newSpace);
+          await parkingspaceRepo.create(newSpace);
           break;
         case 2:
           stdout.writeln("List of parking spaces");
@@ -77,13 +77,15 @@ Future<void> parkingspaceMenu() async {
           }
           break;
         case 5:
-        stdout.writeln("Delete parking space");
+          stdout.writeln("Delete parking space");
           stdout.writeln("Enter parking space id: ");
           String parkingSpaceId = (getUserStringInput()).trim();
-          final parkingspace = await parkingspaceRepo.getSpaceById(parkingSpaceId);
+          final parkingspace =
+              await parkingspaceRepo.getSpaceById(parkingSpaceId);
           if (parkingspace != null) {
             stdout.write("Are you sure you want to delete: ");
-            stdout.write('Deleting : ${parkingspace.parkingSpaceId} - ${parkingspace.number} ? (y/n)');
+            stdout.write(
+                'Deleting : ${parkingspace.parkingSpaceId} - ${parkingspace.number} ? (y/n)');
             String deleting = getUserStringInput();
             if (deleting.toLowerCase() == 'y') {
               parkingspaceRepo.delete(parkingSpaceId);

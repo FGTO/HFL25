@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -48,29 +49,36 @@ void main(List<String> args) async {
 final _router =
     Router()
       ..get('/', _rootHandler)
-      // User handler
+      // User handlers
       ..get('/getusers', _getUsersHandler)
       ..get('/getuser/<id>', _getUserByIdHandler)
       ..post('/adduser', _addUserHandler)
       ..patch('/updateuser/<id>', _updateUserHandler)
       ..delete('/deleteuser/<id>', _deleteUserHandler)
-      // Vehicle handler
+      // Vehicle handlers
       ..get('/getvehicles', _getVehiclesHandler)
       ..get('/getvehicle/<id>', _getVehicleByIdHandler)
       ..post('/addvehicle', _addVehicleHandler)
       ..patch('/updatevehicle/<id>', _updateVehicleHandler)
       ..delete('/deletevehicle/<id>', _deleteVehicleHandler)
-      // Parking handler
+      // Parking handlers
       ..get('/getparkings', _getParkingsHandler)
       ..get('/getparking/<id>', _getParkingByIdHandler)
       ..post('/addparking', _addParkingHandler)
       ..patch('/updateparking/<id>', _updateParkingHandler)
-      ..delete('/deleteparking/<id>', _deleteParkingHandler);
-
+      ..delete('/deleteparking/<id>', _deleteParkingHandler)
+      // Parking space handlers
+      ..get('/getparkingspaces', _getParkingspacesHandler)
+      ..post('/addparkingspace', _addParkingspaceHandler);
+/*
+      ..get('/getparkingspace/<id>', _getParkingspaceByIdHandler)
+      ..patch('/updateparkingspace/<id>', _updateParkingspaceHandler)
+      ..delete('/deleteparkingspace/<id>', _deleteParkingspaceHandler);
+*/
 Future<Response> _deleteParkingHandler(Request request, String id) async {
   final file = File('data/parking.json');
   List<dynamic> parkings = [];
-  
+
   if (await file.exists()) {
     final contents = await file.readAsString();
     if (contents.isNotEmpty) {
@@ -145,14 +153,14 @@ Future<Response> _deleteUserHandler(Request request, String id) async {
 Future<Response> _updateParkingHandler(Request request, String id) async {
   final file = File('data/parking.json');
   List<dynamic> parkings = [];
-  
+
   if (await file.exists()) {
     final contents = await file.readAsString();
     if (contents.isNotEmpty) {
       parkings = jsonDecode(contents);
     }
   }
-  
+
   final parkingIndex = parkings.indexWhere(
     (parking) => parking['parkingId'].toString() == id,
   );
@@ -309,11 +317,38 @@ Future<Response> _getUserByIdHandler(Request request, String id) async {
   );
 }
 
+Future<Response> _addParkingspaceHandler(Request request) async {
+  try {
+    final data = await request.readAsString();
+    final json = jsonDecode(data);
+    final file = File('data/parkingspace.json');
+
+    List<dynamic> parkingspaces = [];
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+
+      if (contents.isNotEmpty) {
+        parkingspaces = jsonDecode(contents);
+      }
+    }
+    parkingspaces.add(json);
+
+    await file.writeAsString(jsonEncode(parkingspaces), mode: FileMode.write);
+    stdout.writeln('Parkspace added successfully');
+
+    return Response.ok(jsonEncode(json));
+  } catch (e, stackTrace) {
+    stderr.writeln("Error in _addParkingspaceHandler: $e");
+    stderr.writeln(stackTrace);
+    return Response.internalServerError(body: 'Server error');
+  }
+}
+
 Future<Response> _addParkingHandler(Request request) async {
   try {
     final data = await request.readAsString();
     final json = jsonDecode(data);
-    final file = File('data/parking,json');
+    final file = File('data/parking.json');
 
     List<dynamic> parkings = [];
     if (await file.exists()) {
@@ -395,6 +430,27 @@ Future<Response> _addUserHandler(Request request) async {
     stderr.writeln(stackTrace);
     return Response.internalServerError(body: 'Server error');
   }
+}
+
+Future<Response> _getParkingspacesHandler(Request request) async {
+  final file = File('data/parkingspace.json');
+
+  if (!await file.exists()) {
+    print('ERROR: parkingspace.json file not found');
+    return Response.notFound('Parkingspace data file not found');
+  }
+
+  List<dynamic> parkingspaces = [];
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    if (contents.isNotEmpty) {
+      parkingspaces = jsonDecode(contents);
+    }
+  }
+  return Response.ok(
+    jsonEncode(parkingspaces),
+    headers: {'Content-Type': 'application/json'},
+  );
 }
 
 Future<Response> _getParkingsHandler(Request request) async {

@@ -1,1 +1,26 @@
-[{"personUuid":"2b7ffa0d-7b03-4d1b-9843-a1cd65028ba4","personId":"1234561234","firstName":"Adam","surname":"adamsson","email":"adam@mail.com","vehicleIds":[]},{"personUuid":"87d4eef7-dd3f-4efb-a3da-e147dccb7302","personId":"6543214321","firstName":"Bengt","surname":"Bengtsson","email":"bengt@mail.com","vehicleIds":[]},{"personUuid":"ea8ab85b-f4bb-41c2-88ab-2d1b074a6ec6","personId":"1122334444","firstName":"Carin","surname":"Carinsson","email":"carin@mail.com","vehicleIds":[]},{"personUuid":"47a5de32-12ea-4bd8-a893-bd192f5427ef","personId":"1122334455","firstName":"Test","surname":"TestEfter","email":"test@mail.com","vehicleIds":[]},{"personUuid":"2e768a58-a53c-4ea5-a6ab-1ab402fbdd78","personId":"2233448899","firstName":"bengt","surname":"Bengtsson","email":"bengt@mail.com","vehicleIds":[]}]
+[
+  {
+    "personUuid": "ea8ab85b-f4bb-41c2-88ab-2d1b074a6ec6",
+    "personId": "1122334444",
+    "firstName": "Carin",
+    "surname": "Carinsson",
+    "email": "carin@mail.com",
+    "vehicleIds": []
+  },
+  {
+    "personUuid": "47a5de32-12ea-4bd8-a893-bd192f5427ef",
+    "personId": "1122334455",
+    "firstName": "Test",
+    "surname": "TestEfter",
+    "email": "test@mail.com",
+    "vehicleIds": []
+  },
+  {
+    "personUuid": "2e768a58-a53c-4ea5-a6ab-1ab402fbdd78",
+    "personId": "2233448899",
+    "firstName": "bengt",
+    "surname": "Bengtsson",
+    "email": "bengt@mail.com",
+    "vehicleIds": []
+  }
+]
