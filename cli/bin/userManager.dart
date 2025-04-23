@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:shared/shared.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../utils/helperFunctions.dart';
 import '../repositories/userRepository.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
 Future<void> userMenu() async {
   while (true) {
@@ -26,7 +27,7 @@ Future<void> userMenu() async {
     String menuChoice = getUserStringInput();
     int? menuNum = int.tryParse(menuChoice);
     if (menuNum != null && menuNum >= 1 && menuNum <= 6) {
-      var uuid = Uuid();
+      // var uuid = Uuid();
       var personRepo = PersonRepository();
       switch (menuNum) {
         case 1:
@@ -68,14 +69,22 @@ Future<void> userMenu() async {
             }
           } while (validationMessage.isNotEmpty);
 
-          String personUuid = uuid.v4();
+          // String personUuid = uuid.v4();
+          String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+          if (uid == null) {
+            stderr.writeln("Error: No user is currently logged in.");
+            break;
+          }
+
           Person newAddPerson = Person(
-              personUuid: personUuid,
-              personId: securityNum.replaceAll('-', ''),
-              firstName: firstName,
-              surname: surname,
-              email: email,
-              vehicleIds: []);
+            personUuid: uid, // safe now
+            personId: securityNum.replaceAll('-', ''),
+            firstName: firstName,
+            surname: surname,
+            email: email,
+            vehicleIds: [],
+          );
           try {
             await personRepo.create(newAddPerson);
             stdout.writeln("");

@@ -1,16 +1,36 @@
 [
   {
     "vehicleId": "bb0e256b-e108-42e2-ba4e-9149eb0bac06",
-    "ownerId": "2233448899",
-    "licensePlate": "abc123",
+    "ownerId": "PvPrOpeVlvZcBouLAI5Nt5N9vex2",
+    "licensePlate": "AAA111",
     "model": "vehicletype.motorcycle",
-    "parkingSpaceId": null
+    "parkingSpaceId": null,
+    "vehicletype":"Motorcycle"
   },
   {
     "vehicleId": "42f4d689-9326-4a78-a5e2-974846af9fdf",
-    "ownerId": "1122338899",
-    "licensePlate": "bbb222",
-    "model": "motorcycle",
-    "parkingSpaceId": null
+    "ownerId": "PvPrOpeVlvZcBouLAI5Nt5N9vex2",
+    "licensePlate": "BBB222",
+    "model": "vehicletype.vehicle",
+    "parkingSpaceId": null,
+    "vehicletype":"Car"
+
+  },
+  {
+    "vehicleId": "bb0e256b-e108-42e2-ba4e-9149eb0bac06",
+    "ownerId": "c0LX6sDWvYX8TgFeHSbow5uaUVO2",
+    "licensePlate": "CCC333",
+    "model": "vehicletype.motorcycle",
+    "parkingSpaceId": null,
+    "vehicletype":"Motorcycle"
+  },
+  {
+    "vehicleId": "42f4d689-9326-4a78-a5e2-974846af9fdf",
+    "ownerId": "c0LX6sDWvYX8TgFeHSbow5uaUVO2",
+    "licensePlate": "DDD444",
+    "model": "vehicletype.largeVehicle",
+    "parkingSpaceId": null,
+    "vehicletype":"Large vehicle"
+
   }
 ]

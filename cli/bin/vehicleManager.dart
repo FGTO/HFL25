@@ -33,8 +33,8 @@ Future<void> vehcicleMenu() async {
           stdout.writeln("4. Other");
           stdout.write("Choose one vehicla class: ");
           String selectedVehicleType = getUserStringInput();
-          VehicleType vehicleType =
-              getVehicleTypeFromInput(selectedVehicleType) ?? VehicleType.other;
+          String vehicleType =
+              getVehicleTypeFromInput(selectedVehicleType) ?? 'Unknown vehicle';
           stdout.writeln("Input vehicle owner social security number: ");
           String securityNum = getUserStringInput();
           String vehicleId = uuid.v4();
@@ -43,7 +43,7 @@ Future<void> vehcicleMenu() async {
               vehicleId: vehicleId,
               ownerId: securityNum,
               licensePlate: licensePlate,
-              model: vehicleType.name);
+              model: vehicleType);
 
           await vehicleRepo.create(newVehicle);
           break;

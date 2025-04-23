@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:parkapp/components/login_textfield.dart';
 import 'package:parkapp/components/signin_button.dart';
 import 'package:parkapp/components/signin_logo.dart';
+import 'package:parkapp/pages/parking_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -18,76 +19,63 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   // Sign in user method
-  void signInUser() async {
-    // Sign in progress indicator
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      if (!mounted) return;
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return;
-      Navigator.pop(context);
-      errorDialog(e.code);
-    }
-  }
-
-  // Dialog for wrong email
-void errorDialog(String message) {
+// Sign in user method
+void signInUser() async {
+  // Sign in progress indicator
   showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
-        title: Center(child: Text('Error when trying login',
-        style: TextStyle(fontSize: 16.0),)),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      );
+      return const Center(child: CircularProgressIndicator());
     },
   );
+
+  try {
+    // Attempt to sign in the user
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    if (!mounted) return;
+    Navigator.pop(context);  // Dismiss loading dialog
+
+    // Navigate to the parking page after successful sign-in
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ParkingPage()), // Replace with your actual ParkingPage
+    );
+  } on FirebaseAuthException catch (e) {
+    if (!mounted) return;
+    Navigator.pop(context);  // Dismiss loading dialog
+    errorDialog(e.code);  // Show error dialog
+  }
 }
 
-  /*   // Dialog for incorrect password
-  void wrongPasswordMessage() {
+  // Dialog for wrong email
+  void errorDialog(String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text('Wrong password'),
-          content: Text('The password you entered is incorrect.'),
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              'Error when trying login',
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
         );
       },
     );
   }
 
-  void tooManyRequestsMessage() {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return const AlertDialog(
-        title: Text('Too many attempts'),
-        content: Text(
-          'You’ve made too many login attempts. Please try again later.',
-        ),
-      );
-    },
-  );
-} */
+
 
   @override
   Widget build(BuildContext context) {
